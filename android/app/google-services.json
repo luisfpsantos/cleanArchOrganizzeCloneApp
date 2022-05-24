@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "197283713052",
+    "firebase_url": "https://organizze-app-flutter-default-rtdb.firebaseio.com",
+    "project_id": "organizze-app-flutter",
+    "storage_bucket": "organizze-app-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197283713052:android:e99e53ff4a038bdb66cfd9",
+        "android_client_info": {
+          "package_name": "com.example.organizze_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "197283713052-o8j4qbm2b6obfutlu9h6faf1oje4mm5j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCr5sSkrGLHQ7sjCXX95n8p2V2hk-wMEGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "197283713052-o8j4qbm2b6obfutlu9h6faf1oje4mm5j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
