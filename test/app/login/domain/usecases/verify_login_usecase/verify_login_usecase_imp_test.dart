@@ -3,13 +3,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:organizze_app/app/login/domain/errors/verify_login_errors.dart';
 import 'package:organizze_app/app/login/domain/repositories/verify_login_repository.dart';
+import 'package:organizze_app/app/login/domain/usecases/verify_login_usecase/verify_login_usecase.dart';
 import 'package:organizze_app/app/login/domain/usecases/verify_login_usecase/verify_login_usecase_imp.dart';
 
 class RepositoryMock extends Mock implements VerifyLoginRepository {}
 
 void main() {
-  final repository = RepositoryMock();
-  final usecase = VerifyLoginUsecaseImp(repository);
+  late RepositoryMock repository;
+  late VerifyLoginUsecase usecase;
+
+  setUp(() {
+    repository = RepositoryMock();
+    usecase = VerifyLoginUsecaseImp(repository);
+  });
 
   test('should return true, user authenticated', () async {
     when(() => repository(any(), any())).thenAnswer((_) async {

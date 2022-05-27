@@ -2,14 +2,20 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:organizze_app/app/login/domain/errors/verify_login_errors.dart';
+import 'package:organizze_app/app/login/domain/repositories/verify_login_repository.dart';
 import 'package:organizze_app/app/login/infra/datasources/verify_login_datasource.dart';
 import 'package:organizze_app/app/login/infra/repositories/verify_login_repository_imp.dart';
 
 class DatasourceMock extends Mock implements VerifyLoginDatasource {}
 
 void main() {
-  final datasource = DatasourceMock();
-  final repository = VerifyLoginRepositoryImp(datasource);
+  late DatasourceMock datasource;
+  late VerifyLoginRepository repository;
+
+  setUp(() {
+    datasource = DatasourceMock();
+    repository = VerifyLoginRepositoryImp(datasource);
+  });
 
   test('should return true, user authenticated', () async {
     when(() => datasource(any(), any())).thenAnswer((_) async => true);
