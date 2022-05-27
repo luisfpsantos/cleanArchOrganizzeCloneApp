@@ -4,16 +4,24 @@ import 'package:mocktail/mocktail.dart';
 import 'package:organizze_app/app/login/domain/entities/logged_user_entity.dart';
 import 'package:organizze_app/app/login/domain/errors/get_user_in_database_errors.dart';
 import 'package:organizze_app/app/login/domain/repositories/get_user_in_database_repository.dart';
+import 'package:organizze_app/app/login/domain/usecases/get_user_in_database_usecase/get_user_in_database_usecase.dart';
 import 'package:organizze_app/app/login/domain/usecases/get_user_in_database_usecase/get_user_in_database_usecase_imp.dart';
 
 class RepositoryMock extends Mock implements GetUserInDatabaseRepository {}
 
 void main() {
-  final repositoryMock = RepositoryMock();
-  final usecase = GetUserInDatabaseUsecaseImp(repositoryMock);
+  late RepositoryMock repository;
+  late GetUserInDatabaseUsecase usecase;
+
+  setUpAll(() {}); // inicia uma vez apenas
+
+  setUp(() {
+    repository = RepositoryMock();
+    usecase = GetUserInDatabaseUsecaseImp(repository);
+  }); // inicia toda vez que um test for iniciado
 
   test('should return LoggedUserEntity', () async {
-    when(() => repositoryMock(any())).thenAnswer((_) async => Right(
+    when(() => repository(any())).thenAnswer((_) async => Right(
           LoggedUserEntity(name: 'name', user: 'user', authenticated: true),
         ));
 
@@ -23,7 +31,7 @@ void main() {
   });
 
   test('should return error', () async {
-    when(() => repositoryMock(any())).thenAnswer((_) async => Left(
+    when(() => repository(any())).thenAnswer((_) async => Left(
           UserNotAuthenticated('test'),
         ));
 
