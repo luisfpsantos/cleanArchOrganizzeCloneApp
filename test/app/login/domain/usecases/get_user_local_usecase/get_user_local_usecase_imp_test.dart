@@ -4,8 +4,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:organizze_app/app/login/domain/entities/login_entity.dart';
 import 'package:organizze_app/app/login/domain/errors/get_user_local_errors.dart';
 import 'package:organizze_app/app/login/domain/repositories/get_user_local_repository.dart';
-import 'package:organizze_app/app/login/domain/usecases/get_user_local_usecase.dart/get_user_local_usecase.dart';
-import 'package:organizze_app/app/login/domain/usecases/get_user_local_usecase.dart/get_user_local_usecase_imp.dart';
+import 'package:organizze_app/app/login/domain/usecases/get_user_local_usecase/get_user_local_usecase.dart';
+import 'package:organizze_app/app/login/domain/usecases/get_user_local_usecase/get_user_local_usecase_imp.dart';
 
 class RepositoryMock extends Mock implements GetUserLocalRepository {}
 
@@ -18,22 +18,19 @@ void main() {
     usecase = GetUserLocalUsecaseImp(repository);
   });
 
-  test('should return LoginEntity', () async {
-    when(() => repository()).thenAnswer((_) async => Right(
-          LoginEntity(user: '', password: '', rememberMe: false),
-        ));
+  test('should return LoginEntity', () {
+    when(() => repository()).thenReturn(
+        Right(LoginEntity(user: '', password: '', rememberMe: false)));
 
-    var result = await usecase();
+    var result = usecase();
 
     expect(result.fold(id, id), isA<LoginEntity>());
   });
 
   test('should return error type GetUserLocalErrors', () async {
-    when(() => repository()).thenAnswer(
-      (_) async => Left(LocalUserNotFound('test')),
-    );
+    when(() => repository()).thenReturn(Left(LocalUserNotFound('test')));
 
-    var result = await usecase();
+    var result = usecase();
 
     expect(result.fold(id, id), isA<LocalUserNotFound>());
   });

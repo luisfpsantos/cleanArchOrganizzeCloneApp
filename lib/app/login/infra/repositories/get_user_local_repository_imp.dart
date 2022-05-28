@@ -10,9 +10,9 @@ class GetUserLocalRepositoryImp implements GetUserLocalRepository {
   GetUserLocalRepositoryImp(this._getUserLocalDatasource);
 
   @override
-  Future<Either<GetUserLocalErrors, LoginEntity>> call() async {
+  Either<GetUserLocalErrors, LoginEntity> call() {
     try {
-      var result = await _getUserLocalDatasource();
+      var result = _getUserLocalDatasource();
       return Right(result);
     } on LocalUserNotFound catch (e) {
       return Left(e);
