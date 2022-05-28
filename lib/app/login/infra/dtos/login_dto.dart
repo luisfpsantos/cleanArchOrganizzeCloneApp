@@ -7,8 +7,19 @@ class LoginDto extends LoginEntity {
     required super.rememberMe,
   });
 
-  @override
-  String toString() {
-    return 'user: $user, password: $password, rememberMe: $rememberMe';
+  static fromMap(Map<String, dynamic> map) {
+    return LoginDto(
+      password: map['password'],
+      user: map['user'],
+      rememberMe: map['rememberMe'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'user': user,
+      'password': password,
+      'rememberMe': rememberMe,
+    };
   }
 }
