@@ -14,4 +14,12 @@ class CategoryDto extends CategoryEntity {
       'iconPath': iconPath,
     };
   }
+
+  static CategoryDto fromMap(Map<String, dynamic> map) {
+    return CategoryDto(
+      categoryType: map['categoryType'],
+      name: map['name'],
+      iconPath: map['iconPath'],
+    );
+  }
 }
