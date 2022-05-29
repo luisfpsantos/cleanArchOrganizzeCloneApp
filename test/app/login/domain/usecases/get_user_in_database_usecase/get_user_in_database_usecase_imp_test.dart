@@ -22,7 +22,8 @@ void main() {
 
   test('should return LoggedUserEntity', () async {
     when(() => repository(any())).thenAnswer((_) async => Right(
-          LoggedUserEntity(name: 'name', user: 'user', authenticated: true),
+          LoggedUserEntity(
+              name: 'name', user: 'user', authenticated: true, userId: ''),
         ));
 
     var result = await usecase('luis');

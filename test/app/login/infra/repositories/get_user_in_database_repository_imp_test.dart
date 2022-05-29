@@ -20,8 +20,8 @@ void main() {
   });
 
   test('should return LoggedUserEntity', () async {
-    when(() => datasource(any())).thenAnswer((_) async =>
-        LoggedUserDto(name: 'name', user: 'user', authenticated: true));
+    when(() => datasource(any())).thenAnswer((_) async => LoggedUserDto(
+        name: 'name', user: 'user', authenticated: true, userId: ''));
 
     var result = await repository('luis');
 
@@ -30,8 +30,8 @@ void main() {
 
   test('should return error UserNotAuthenticated when authenticated is false',
       () async {
-    when(() => datasource(any())).thenAnswer((_) async =>
-        LoggedUserDto(name: 'name', user: 'user', authenticated: false));
+    when(() => datasource(any())).thenAnswer((_) async => LoggedUserDto(
+        name: 'name', user: 'user', authenticated: false, userId: ''));
 
     var result = await repository('luis');
 

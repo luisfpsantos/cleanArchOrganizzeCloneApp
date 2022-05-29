@@ -18,6 +18,7 @@ class GetUserInDatabaseDatasourceImp implements GetUserInDatabaseDatasource {
       throw UserNotFound('user not found in database');
     }
 
-    return LoggedUserDto.fromMap(result.docs[0].data() as Map<String, dynamic>);
+    return LoggedUserDto.fromMap(
+        result.docs[0].data() as Map<String, dynamic>, result.docs[0].id);
   }
 }

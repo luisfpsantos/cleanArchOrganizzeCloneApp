@@ -5,13 +5,15 @@ class LoggedUserDto extends LoggedUserEntity {
     required super.name,
     required super.user,
     required super.authenticated,
+    required super.userId,
   });
 
-  static fromMap(Map<String, dynamic> map) {
+  static fromMap(Map<String, dynamic> map, String userId) {
     return LoggedUserDto(
       name: map['name'],
       user: map['user'],
       authenticated: map['authenticated'],
+      userId: userId,
     );
   }
 }
