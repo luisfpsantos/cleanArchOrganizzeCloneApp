@@ -15,11 +15,11 @@ class GetListCategoriesRepositoryImp implements GetListCategoriesRepository {
   ) async {
     try {
       final result = await _getListCategoriesDatasource(categoryType);
-      return Right(result);
+      return right(result);
     } on NoCategoriesFound catch (e) {
       return left(e);
     } catch (e) {
-      return Left(RepositoryError('Unknown error: ${e.toString()}'));
+      return left(RepositoryError('Unknown error: ${e.toString()}'));
     }
   }
 }

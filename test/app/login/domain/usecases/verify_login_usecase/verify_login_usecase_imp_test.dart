@@ -19,7 +19,7 @@ void main() {
 
   test('should return true, user authenticated', () async {
     when(() => repository(any(), any())).thenAnswer((_) async {
-      return const Right(true);
+      return right(true);
     });
 
     final result = await usecase.call('luis', '1234');

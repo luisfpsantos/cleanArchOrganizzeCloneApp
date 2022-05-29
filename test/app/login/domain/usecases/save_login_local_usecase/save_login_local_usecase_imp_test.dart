@@ -24,7 +24,7 @@ void main() {
   });
 
   test('should return true, loginSaveLocally', () async {
-    when(() => repository(any())).thenAnswer((_) async => const Right(true));
+    when(() => repository(any())).thenAnswer((_) async => right(true));
 
     var result = await usecase(
         LoginEntity(user: 'luis', password: '1234', rememberMe: true));

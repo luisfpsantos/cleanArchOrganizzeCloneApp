@@ -21,7 +21,7 @@ void main() {
   }); // inicia toda vez que um test for iniciado
 
   test('should return LoggedUserEntity', () async {
-    when(() => repository(any())).thenAnswer((_) async => Right(
+    when(() => repository(any())).thenAnswer((_) async => right(
           LoggedUserEntity(
               name: 'name', user: 'user', authenticated: true, userId: ''),
         ));
@@ -32,7 +32,7 @@ void main() {
   });
 
   test('should return error', () async {
-    when(() => repository(any())).thenAnswer((_) async => Left(
+    when(() => repository(any())).thenAnswer((_) async => left(
           UserNotAuthenticated('test'),
         ));
 

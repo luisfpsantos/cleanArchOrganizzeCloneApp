@@ -25,7 +25,7 @@ void main() {
   });
 
   test('should return true when add is succeed', () async {
-    when(() => repository(any())).thenAnswer((_) async => const Right(true));
+    when(() => repository(any())).thenAnswer((_) async => right(true));
 
     var result = await usecase(
         CategoryEntity(name: 'test', categoryType: 'test', iconPath: 'test'));

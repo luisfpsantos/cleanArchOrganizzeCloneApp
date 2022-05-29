@@ -16,10 +16,10 @@ class GetUserInDatabaseRepositoryImp implements GetUserInDatabaseRepository {
       var result = await _getUserInDatabaseDatasource(loggedUser);
 
       if (!result.authenticated) {
-        return Left(UserNotAuthenticated('User not Authenticated'));
+        return left(UserNotAuthenticated('User not Authenticated'));
       }
 
-      return Right(result);
+      return right(result);
     } on UserNotFound catch (e) {
       return left(e);
     } catch (e) {

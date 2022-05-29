@@ -13,11 +13,11 @@ class GetUserLocalRepositoryImp implements GetUserLocalRepository {
   Either<GetUserLocalErrors, LoginEntity> call() {
     try {
       var result = _getUserLocalDatasource();
-      return Right(result);
+      return right(result);
     } on LocalUserNotFound catch (e) {
-      return Left(e);
+      return left(e);
     } catch (e) {
-      return Left(RepositoryError('unknown error'));
+      return left(RepositoryError('unknown error'));
     }
   }
 }

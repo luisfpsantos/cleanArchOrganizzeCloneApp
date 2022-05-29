@@ -20,7 +20,7 @@ void main() {
 
   test('should return LoginEntity', () {
     when(() => repository()).thenReturn(
-        Right(LoginEntity(user: '', password: '', rememberMe: false)));
+        right(LoginEntity(user: '', password: '', rememberMe: false)));
 
     var result = usecase();
 
@@ -28,7 +28,7 @@ void main() {
   });
 
   test('should return error type GetUserLocalErrors', () async {
-    when(() => repository()).thenReturn(Left(LocalUserNotFound('test')));
+    when(() => repository()).thenReturn(left(LocalUserNotFound('test')));
 
     var result = usecase();
 

@@ -19,7 +19,7 @@ void main() {
 
   test('should return list of CategoryEntity', () async {
     when(() => repository(any()))
-        .thenAnswer((_) async => const Right(<CategoryEntity>[]));
+        .thenAnswer((_) async => right(<CategoryEntity>[]));
 
     final result = await usecase('income');
 

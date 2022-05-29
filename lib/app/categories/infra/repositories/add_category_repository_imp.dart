@@ -13,9 +13,9 @@ class AddCategoryRepositoryImp implements AddCategoryRepository {
   Future<Either<AddCategoryErrors, bool>> call(CategoryEntity category) async {
     try {
       var result = await _addCategoryDatasource(category);
-      return Right(result);
+      return right(result);
     } on AddError catch (e) {
-      return Left(e);
+      return left(e);
     } catch (e) {
       return left(RepositoryError('unknown error'));
     }
