@@ -18,4 +18,14 @@ class CreditCardDto extends CreditCardEntity {
       'name': name,
     };
   }
+
+  static CreditCardDto fromMap(Map<String, dynamic> map) {
+    return CreditCardDto(
+      closedDay: map['closedDay'],
+      dueDay: map['dueDay'],
+      iconPath: map['iconPath'],
+      limit: map['limit'].toDouble(),
+      name: map['name'],
+    );
+  }
 }
