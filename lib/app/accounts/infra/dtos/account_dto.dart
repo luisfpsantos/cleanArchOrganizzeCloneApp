@@ -14,4 +14,12 @@ class AccountDto extends AccountEntity {
       'name': name,
     };
   }
+
+  static AccountDto fromMap(Map<String, dynamic> map) {
+    return AccountDto(
+      balance: map['balance'].toDouble(),
+      iconPath: map['iconPath'],
+      name: map['name'],
+    );
+  }
 }

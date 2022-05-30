@@ -1,5 +1,5 @@
 class EntryEntity {
-  final int amount;
+  final double amount;
   final String category;
   final String description;
   final String entryType;
