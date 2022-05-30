@@ -16,6 +16,8 @@ class AddCategoryRepositoryImp implements AddCategoryRepository {
       return right(result);
     } on AddError catch (e) {
       return left(e);
+    } on CategoryAlreadyExists catch (e) {
+      return left(e);
     } catch (e) {
       return left(RepositoryError('unknown error'));
     }

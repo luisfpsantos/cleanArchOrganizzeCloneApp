@@ -42,6 +42,15 @@ void main() {
     expect(result.fold(id, id), isA<AddError>());
   });
 
+  test('should return category already exists', () async {
+    when(() => datasource(any())).thenThrow(CategoryAlreadyExists('test'));
+
+    var result = await repository(
+        CategoryEntity(name: '', categoryType: '', iconPath: ''));
+
+    expect(result.fold(id, id), isA<CategoryAlreadyExists>());
+  });
+
   test('should return repositoryError when something is wrong', () async {
     when(() => datasource(any())).thenThrow(Exception());
 

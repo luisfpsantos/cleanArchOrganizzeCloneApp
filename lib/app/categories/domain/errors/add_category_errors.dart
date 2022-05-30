@@ -12,6 +12,10 @@ class AddError extends AddCategoryErrors {
   AddError(super.msg);
 }
 
+class CategoryAlreadyExists extends AddCategoryErrors {
+  CategoryAlreadyExists(super.msg);
+}
+
 class RepositoryError extends AddCategoryErrors {
   RepositoryError(super.msg);
 }

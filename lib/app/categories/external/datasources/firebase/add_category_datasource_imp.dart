@@ -11,6 +11,13 @@ class AddCategoryDatasourceImp implements AddCategoryDatasource {
 
   @override
   Future<bool> call(CategoryEntity category) async {
+    final query =
+        await _categoryCollection.where('name', isEqualTo: category.name).get();
+
+    if (query.docs.isNotEmpty) {
+      throw CategoryAlreadyExists('category already exists');
+    }
+
     final categoryDto = CategoryDto(
       categoryType: category.categoryType,
       name: category.name,
