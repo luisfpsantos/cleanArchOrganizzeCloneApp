@@ -5,8 +5,10 @@ class EntryEntity {
   final String entryType;
   final String status;
   final String accountType;
+  final DateTime date;
 
   EntryEntity({
+    required this.date,
     required this.amount,
     required this.category,
     required this.description,
