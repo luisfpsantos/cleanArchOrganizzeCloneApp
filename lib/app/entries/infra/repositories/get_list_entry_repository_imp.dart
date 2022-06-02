@@ -1,3 +1,4 @@
+import 'package:organizze_app/app/entries/domain/entities/query_entity.dart';
 import 'package:organizze_app/app/entries/domain/errors/get_list_entry_errors.dart';
 import 'package:organizze_app/app/entries/domain/entities/entry_entity.dart';
 import 'package:dartz/dartz.dart';
@@ -10,9 +11,11 @@ class GetListEntryRepositoryImp implements GetListEntryRepository {
   GetListEntryRepositoryImp(this._getListEntryDatasource);
 
   @override
-  Future<Either<GetListEntryErrors, List<EntryEntity>>> call() async {
+  Future<Either<GetListEntryErrors, List<EntryEntity>>> call({
+    List<QueryEntity>? query,
+  }) async {
     try {
-      final result = await _getListEntryDatasource();
+      final result = await _getListEntryDatasource(query: query);
       return right(result);
     } on NoEntryFound catch (e) {
       return left(e);
