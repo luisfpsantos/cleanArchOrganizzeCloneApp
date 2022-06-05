@@ -19,9 +19,9 @@ void main() {
   });
 
   test('should return list of entryEntity', () async {
-    when(() => repository()).thenAnswer((_) async => right(<EntryDto>[]));
+    when(() => repository(any())).thenAnswer((_) async => right(<EntryDto>[]));
 
-    final result = await usecase();
+    final result = await usecase('userId');
 
     expect(result.fold(id, id), isA<List<EntryEntity>>());
   });

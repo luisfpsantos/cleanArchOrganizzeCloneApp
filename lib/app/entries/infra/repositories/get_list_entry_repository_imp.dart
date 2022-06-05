@@ -11,11 +11,12 @@ class GetListEntryRepositoryImp implements GetListEntryRepository {
   GetListEntryRepositoryImp(this._getListEntryDatasource);
 
   @override
-  Future<Either<GetListEntryErrors, List<EntryEntity>>> call({
+  Future<Either<GetListEntryErrors, List<EntryEntity>>> call(
+    String userId, {
     List<QueryEntity>? query,
   }) async {
     try {
-      final result = await _getListEntryDatasource(query: query);
+      final result = await _getListEntryDatasource(userId, query: query);
       return right(result);
     } on NoEntryFound catch (e) {
       return left(e);

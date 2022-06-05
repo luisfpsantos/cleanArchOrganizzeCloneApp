@@ -10,9 +10,11 @@ class GetListCreditCardRepositoryImp implements GetListCreditCardRepository {
   GetListCreditCardRepositoryImp(this._getListCreditCardDatasource);
 
   @override
-  Future<Either<GetListCreditCardErros, List<CreditCardEntity>>> call() async {
+  Future<Either<GetListCreditCardErros, List<CreditCardEntity>>> call(
+    String userId,
+  ) async {
     try {
-      final result = await _getListCreditCardDatasource();
+      final result = await _getListCreditCardDatasource(userId);
       return right(result);
     } on NoCreditCardFound catch (e) {
       return left(e);

@@ -16,7 +16,7 @@ class SaveLoginLocalDatasourceImp implements SaveLoginLocalDatasource {
   Future<bool> call(LoginEntity login) async {
     String jsonString = json.encode(LoginDto(
       password: login.password,
-      user: login.user,
+      user: login.user.toLowerCase(),
       rememberMe: login.rememberMe,
     ).toMap());
 

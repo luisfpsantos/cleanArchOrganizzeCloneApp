@@ -10,9 +10,12 @@ class AddCategoryRepositoryImp implements AddCategoryRepository {
   AddCategoryRepositoryImp(this._addCategoryDatasource);
 
   @override
-  Future<Either<AddCategoryErrors, bool>> call(CategoryEntity category) async {
+  Future<Either<AddCategoryErrors, bool>> call(
+    CategoryEntity category,
+    String userId,
+  ) async {
     try {
-      var result = await _addCategoryDatasource(category);
+      var result = await _addCategoryDatasource(category, userId);
       return right(result);
     } on AddError catch (e) {
       return left(e);

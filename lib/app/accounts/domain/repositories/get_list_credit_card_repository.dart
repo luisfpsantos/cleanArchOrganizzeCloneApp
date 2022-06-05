@@ -3,5 +3,7 @@ import 'package:organizze_app/app/accounts/domain/entities/credit_card_entity.da
 import 'package:organizze_app/app/accounts/domain/errors/get_list_credit_card_erros.dart';
 
 abstract class GetListCreditCardRepository {
-  Future<Either<GetListCreditCardErros, List<CreditCardEntity>>> call();
+  Future<Either<GetListCreditCardErros, List<CreditCardEntity>>> call(
+    String userId,
+  );
 }

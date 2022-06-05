@@ -10,7 +10,9 @@ class GetListAccountUsecaseImp implements GetListAccountUsecase {
   GetListAccountUsecaseImp(this._getListAccountRepository);
 
   @override
-  Future<Either<GetListAccountErrors, List<AccountEntity>>> call() async {
-    return await _getListAccountRepository();
+  Future<Either<GetListAccountErrors, List<AccountEntity>>> call(
+    String userId,
+  ) async {
+    return await _getListAccountRepository(userId);
   }
 }

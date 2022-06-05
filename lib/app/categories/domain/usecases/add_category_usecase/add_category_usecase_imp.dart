@@ -10,7 +10,10 @@ class AddCategoryUsecaseImp implements AddCategoryUsecase {
   AddCategoryUsecaseImp(this._addCategoryRepository);
 
   @override
-  Future<Either<AddCategoryErrors, bool>> call(CategoryEntity category) async {
+  Future<Either<AddCategoryErrors, bool>> call(
+    CategoryEntity category,
+    String userId,
+  ) async {
     if (category.name.isEmpty) {
       return left(InvalidArgument('name cant be null'));
     }
@@ -19,6 +22,6 @@ class AddCategoryUsecaseImp implements AddCategoryUsecase {
       return left(InvalidArgument('icon cant be null'));
     }
 
-    return await _addCategoryRepository(category);
+    return await _addCategoryRepository(category, userId);
   }
 }

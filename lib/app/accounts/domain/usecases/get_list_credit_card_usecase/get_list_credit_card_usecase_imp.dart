@@ -10,7 +10,9 @@ class GetListCreditCardUsecaseImp implements GetListCreditCardUsecase {
   GetListCreditCardUsecaseImp(this._getListCreditCardRepository);
 
   @override
-  Future<Either<GetListCreditCardErros, List<CreditCardEntity>>> call() async {
-    return await _getListCreditCardRepository();
+  Future<Either<GetListCreditCardErros, List<CreditCardEntity>>> call(
+    String userId,
+  ) async {
+    return await _getListCreditCardRepository(userId);
   }
 }

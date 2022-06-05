@@ -24,38 +24,47 @@ void main() {
   });
 
   test('should return true when credit card is added', () async {
-    when(() => datasource(any())).thenAnswer((_) async => true);
+    when(() => datasource(any(), any())).thenAnswer((_) async => true);
 
-    final result = await repository(CreditCardEntity(
-        closedDay: 1, dueDay: 1, iconPath: '/', limit: 1, name: 'a'));
+    final result = await repository(
+        CreditCardEntity(
+            closedDay: 1, dueDay: 1, iconPath: '/', limit: 1, name: 'a'),
+        'userId');
 
     expect(result.fold(id, id), true);
   });
 
   test('should return addError when datasource is incapable to add', () async {
-    when(() => datasource(any())).thenThrow(AddError('test'));
+    when(() => datasource(any(), any())).thenThrow(AddError('test'));
 
-    final result = await repository(CreditCardEntity(
-        closedDay: 1, dueDay: 1, iconPath: '/', limit: 1, name: 'a'));
+    final result = await repository(
+        CreditCardEntity(
+            closedDay: 1, dueDay: 1, iconPath: '/', limit: 1, name: 'a'),
+        'userId');
 
     expect(result.fold(id, id), isA<AddError>());
   });
 
   test('should return credit card already exists', () async {
-    when(() => datasource(any())).thenThrow(CreditCardAlreadyExists('test'));
+    when(() => datasource(any(), any()))
+        .thenThrow(CreditCardAlreadyExists('test'));
 
-    final result = await repository(CreditCardEntity(
-        closedDay: 1, dueDay: 1, iconPath: '/', limit: 1, name: 'a'));
+    final result = await repository(
+        CreditCardEntity(
+            closedDay: 1, dueDay: 1, iconPath: '/', limit: 1, name: 'a'),
+        'userId');
 
     expect(result.fold(id, id), isA<CreditCardAlreadyExists>());
   });
 
   test('should return RepositoryError when datasource throw unknown error',
       () async {
-    when(() => datasource(any())).thenThrow(Exception('asdfasdf'));
+    when(() => datasource(any(), any())).thenThrow(Exception('asdfasdf'));
 
-    final result = await repository(CreditCardEntity(
-        closedDay: 1, dueDay: 1, iconPath: '/', limit: 1, name: 'a'));
+    final result = await repository(
+        CreditCardEntity(
+            closedDay: 1, dueDay: 1, iconPath: '/', limit: 1, name: 'a'),
+        'userId');
 
     expect(result.fold(id, id), isA<RepositoryError>());
   });

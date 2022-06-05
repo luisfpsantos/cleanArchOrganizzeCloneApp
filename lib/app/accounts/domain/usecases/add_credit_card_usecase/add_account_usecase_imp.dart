@@ -12,6 +12,7 @@ class AddCreditCardUsecaseImp implements AddCreditCardUsecase {
   @override
   Future<Either<AddCreditCardErrors, bool>> call(
     CreditCardEntity creditCard,
+    String userId,
   ) async {
     if (creditCard.name.isEmpty) {
       return left(InvalidArgument('name credit card is necessary'));
@@ -33,6 +34,6 @@ class AddCreditCardUsecaseImp implements AddCreditCardUsecase {
       return left(InvalidArgument('limit is invalid'));
     }
 
-    return await _addCreditCardRepository(creditCard);
+    return await _addCreditCardRepository(creditCard, userId);
   }
 }

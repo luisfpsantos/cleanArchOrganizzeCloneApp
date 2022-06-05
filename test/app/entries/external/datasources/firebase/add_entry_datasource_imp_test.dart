@@ -7,25 +7,26 @@ import 'package:organizze_app/app/entries/infra/datasources/add_entry_datasource
 
 void main() {
   late FirebaseFirestore firebaseFirestore;
-  late CollectionReference entryCollection;
   late AddEntryDatasource datasource;
 
   setUp(() {
     firebaseFirestore = FakeFirebaseFirestore();
-    entryCollection = firebaseFirestore.collection('users/userId/entries');
-    datasource = AddEntryDatasourceImp(entryCollection);
+    datasource = AddEntryDatasourceImp(firebaseFirestore);
   });
 
   test('should return true when addedd', () async {
-    final result = await datasource(EntryEntity(
-      date: DateTime.now(),
-      amount: 1,
-      category: 'a',
-      description: 'a',
-      entryType: 'a',
-      status: 'a',
-      accountType: 'a',
-    ));
+    final result = await datasource(
+      EntryEntity(
+        date: DateTime.now(),
+        amount: 1,
+        category: 'a',
+        description: 'a',
+        entryType: 'a',
+        status: 'a',
+        accountType: 'a',
+      ),
+      'userId',
+    );
 
     expect(result, true);
   });

@@ -3,17 +3,25 @@ import 'package:organizze_app/app/categories/domain/entities/category_entity.dar
 import 'package:organizze_app/app/categories/domain/errors/get_list_categories_erros.dart';
 import 'package:organizze_app/app/categories/infra/datasources/get_list_categories_datasource.dart';
 import 'package:organizze_app/app/categories/infra/dtos/category_dto.dart';
+import 'package:organizze_app/app/core/utils/firebase_collections.dart';
 
 class GetListCategoriesDatasourceImp implements GetListCategoriesDatasource {
-  final CollectionReference _categoriesColletction;
+  final FirebaseFirestore _firebaseFirestore;
 
-  GetListCategoriesDatasourceImp(this._categoriesColletction);
+  GetListCategoriesDatasourceImp(this._firebaseFirestore);
 
   @override
-  Future<List<CategoryEntity>> call(String categoryType) async {
+  Future<List<CategoryEntity>> call(
+    String categoryType,
+    String userId,
+  ) async {
+    final categoryCollection = _firebaseFirestore.collection(
+      '${FirebaseCollections.users}/$userId/${FirebaseCollections.categories}',
+    );
+
     var listCategories = <CategoryEntity>[];
 
-    final categories = await _categoriesColletction
+    final categories = await categoryCollection
         .where('categoryType', isEqualTo: categoryType)
         .get();
 
@@ -22,8 +30,7 @@ class GetListCategoriesDatasourceImp implements GetListCategoriesDatasource {
     }
 
     for (var category in categories.docs) {
-      listCategories
-          .add(CategoryDto.fromMap(category.data() as Map<String, dynamic>));
+      listCategories.add(CategoryDto.fromMap(category.data()));
     }
 
     return listCategories;

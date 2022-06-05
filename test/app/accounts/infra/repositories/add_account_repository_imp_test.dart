@@ -23,38 +23,39 @@ void main() {
   });
 
   test('should return true when account is added', () async {
-    when(() => datasource(any())).thenAnswer((_) async => true);
+    when(() => datasource(any(), any())).thenAnswer((_) async => true);
 
-    final result =
-        await repository(AccountEntity(name: '', balance: 1, iconPath: ''));
+    final result = await repository(
+        AccountEntity(name: '', balance: 1, iconPath: ''), 'userId');
 
     expect(result.fold(id, id), true);
   });
 
   test('should return addError when datasource is incapable to add', () async {
-    when(() => datasource(any())).thenThrow(AddError('test'));
+    when(() => datasource(any(), any())).thenThrow(AddError('test'));
 
-    final result =
-        await repository(AccountEntity(name: '', balance: 1, iconPath: ''));
+    final result = await repository(
+        AccountEntity(name: '', balance: 1, iconPath: ''), 'userId');
 
     expect(result.fold(id, id), isA<AddError>());
   });
 
   test('should return account already exists', () async {
-    when(() => datasource(any())).thenThrow(AccountAlreadyExists('test'));
+    when(() => datasource(any(), any()))
+        .thenThrow(AccountAlreadyExists('test'));
 
-    final result =
-        await repository(AccountEntity(name: '', balance: 1, iconPath: ''));
+    final result = await repository(
+        AccountEntity(name: '', balance: 1, iconPath: ''), 'userId');
 
     expect(result.fold(id, id), isA<AccountAlreadyExists>());
   });
 
   test('should return RepositoryError when datasource throw unknown error',
       () async {
-    when(() => datasource(any())).thenThrow(Exception('asdfasdf'));
+    when(() => datasource(any(), any())).thenThrow(Exception('asdfasdf'));
 
-    final result =
-        await repository(AccountEntity(name: '', balance: 1, iconPath: ''));
+    final result = await repository(
+        AccountEntity(name: '', balance: 1, iconPath: ''), 'userId');
 
     expect(result.fold(id, id), isA<RepositoryError>());
   });

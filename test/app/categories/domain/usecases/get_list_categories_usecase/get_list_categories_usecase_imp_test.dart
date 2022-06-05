@@ -18,10 +18,10 @@ void main() {
   });
 
   test('should return list of CategoryEntity', () async {
-    when(() => repository(any()))
+    when(() => repository(any(), any()))
         .thenAnswer((_) async => right(<CategoryEntity>[]));
 
-    final result = await usecase('income');
+    final result = await usecase('income', 'userId');
 
     expect(result.fold(id, id), isA<List<CategoryEntity>>());
   });

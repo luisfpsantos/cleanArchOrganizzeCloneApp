@@ -19,26 +19,26 @@ void main() {
   });
 
   test('should return list of CreditCardEntity', () async {
-    when(() => datasource()).thenAnswer((_) async => <CreditCardEntity>[]);
+    when(() => datasource(any())).thenAnswer((_) async => <CreditCardEntity>[]);
 
-    final result = await repository();
+    final result = await repository('userId');
 
     expect(result.fold(id, id), isA<List<CreditCardEntity>>());
   });
 
   test('should return error when not found any creditCard', () async {
-    when(() => datasource()).thenThrow(NoCreditCardFound('test'));
+    when(() => datasource(any())).thenThrow(NoCreditCardFound('test'));
 
-    final result = await repository();
+    final result = await repository('userId');
 
     expect(result.fold(id, id), isA<NoCreditCardFound>());
   });
 
   test('should return repository error when data source throw unknown error',
       () async {
-    when(() => datasource()).thenThrow(Exception('test'));
+    when(() => datasource(any())).thenThrow(Exception('test'));
 
-    final result = await repository();
+    final result = await repository('userId');
 
     expect(result.fold(id, id), isA<RepositoryError>());
   });

@@ -18,10 +18,10 @@ void main() {
   });
 
   test('should return list CreditCardEntity', () async {
-    when(() => repository())
+    when(() => repository('userId'))
         .thenAnswer((_) async => right(<CreditCardEntity>[]));
 
-    final result = await usecase();
+    final result = await usecase('userId');
 
     expect(result.fold(id, id), isA<List<CreditCardEntity>>());
   });

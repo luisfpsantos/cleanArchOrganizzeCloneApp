@@ -20,25 +20,25 @@ void main() {
   });
 
   test('should return List of EntryEntity', () async {
-    when(() => datasource()).thenAnswer((_) async => <EntryDto>[]);
+    when(() => datasource(any())).thenAnswer((_) async => <EntryDto>[]);
 
-    final result = await repository();
+    final result = await repository('userId');
 
     expect(result.fold(id, id), isA<List<EntryEntity>>());
   });
 
   test('should return error when datasource not found any entry', () async {
-    when(() => datasource()).thenThrow(NoEntryFound('test'));
+    when(() => datasource(any())).thenThrow(NoEntryFound('test'));
 
-    final result = await repository();
+    final result = await repository('userId');
 
     expect(result.fold(id, id), isA<NoEntryFound>());
   });
 
   test('should return error when datasource return unknown error', () async {
-    when(() => datasource()).thenThrow(Exception('test'));
+    when(() => datasource(any())).thenThrow(Exception('test'));
 
-    final result = await repository();
+    final result = await repository('userId');
 
     expect(result.fold(id, id), isA<RepositoryError>());
   });

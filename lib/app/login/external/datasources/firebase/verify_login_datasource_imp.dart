@@ -1,16 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:organizze_app/app/core/utils/firebase_collections.dart';
 import 'package:organizze_app/app/login/domain/errors/verify_login_errors.dart';
 import 'package:organizze_app/app/login/infra/datasources/verify_login_datasource.dart';
 
 class VerifyLoginDatasourceImp implements VerifyLoginDatasource {
-  final CollectionReference _users;
+  final FirebaseFirestore _firebaseFirestore;
 
-  VerifyLoginDatasourceImp(this._users);
+  VerifyLoginDatasourceImp(this._firebaseFirestore);
 
   @override
   Future<bool> call(String user, String password) async {
-    var result =
-        await _users.where('user', isEqualTo: user.toLowerCase()).get();
+    final users = _firebaseFirestore.collection(FirebaseCollections.users);
+
+    var result = await users.where('user', isEqualTo: user.toLowerCase()).get();
 
     if (result.docs.isEmpty) {
       throw UserOrPasswordInvalid('user not found');

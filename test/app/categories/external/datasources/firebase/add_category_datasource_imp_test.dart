@@ -5,36 +5,38 @@ import 'package:organizze_app/app/categories/domain/entities/category_entity.dar
 import 'package:organizze_app/app/categories/domain/errors/add_category_errors.dart';
 import 'package:organizze_app/app/categories/external/datasources/firebase/add_category_datasource_imp.dart';
 import 'package:organizze_app/app/categories/infra/datasources/add_category_datasource.dart';
+import 'package:organizze_app/app/core/utils/firebase_collections.dart';
 
 void main() {
   late FirebaseFirestore firebaseFirestore;
   late AddCategoryDatasource datasource;
-  late CollectionReference categoryCollection;
 
   setUp(() {
     firebaseFirestore = FakeFirebaseFirestore();
-    categoryCollection =
-        firebaseFirestore.collection('users/idUser/categories');
-    datasource = AddCategoryDatasourceImp(categoryCollection);
+    datasource = AddCategoryDatasourceImp(firebaseFirestore);
   });
 
   test('should return true when category addedd', () async {
     var result = await datasource(
-      CategoryEntity(name: 'test', iconPath: '/a/a', categoryType: 'income'),
-    );
+        CategoryEntity(name: 'test', iconPath: '/a/a', categoryType: 'income'),
+        'userId');
 
     expect(result, true);
   });
 
   test('should throw category already exists', () async {
-    await categoryCollection.add({
+    await firebaseFirestore
+        .collection(
+            '${FirebaseCollections.users}/userId/${FirebaseCollections.categories}')
+        .add({
       'name': 'test',
       'iconPath': '/a/a',
       'categoryType': 'income',
     });
 
     final result = datasource(
-        CategoryEntity(name: 'test', iconPath: '/a/a', categoryType: 'income'));
+        CategoryEntity(name: 'test', iconPath: '/a/a', categoryType: 'income'),
+        'userId');
 
     expect(result, throwsA(isA<CategoryAlreadyExists>()));
   });

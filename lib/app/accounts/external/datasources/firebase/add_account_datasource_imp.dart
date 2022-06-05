@@ -3,16 +3,21 @@ import 'package:organizze_app/app/accounts/domain/entities/account_entity.dart';
 import 'package:organizze_app/app/accounts/domain/errors/add_account_error.dart';
 import 'package:organizze_app/app/accounts/infra/datasources/add_account_datasource.dart';
 import 'package:organizze_app/app/accounts/infra/dtos/account_dto.dart';
+import 'package:organizze_app/app/core/utils/firebase_collections.dart';
 
 class AddAccountDatasourceImp implements AddAccountDatasource {
-  final CollectionReference _accountCollection;
+  final FirebaseFirestore _firebaseFirestore;
 
-  AddAccountDatasourceImp(this._accountCollection);
+  AddAccountDatasourceImp(this._firebaseFirestore);
 
   @override
-  Future<bool> call(AccountEntity account) async {
+  Future<bool> call(AccountEntity account, String userId) async {
+    final accountCollection = _firebaseFirestore.collection(
+      '${FirebaseCollections.users}/$userId/${FirebaseCollections.accounts}',
+    );
+
     final query =
-        await _accountCollection.where('name', isEqualTo: account.name).get();
+        await accountCollection.where('name', isEqualTo: account.name).get();
 
     if (query.docs.isNotEmpty) {
       throw AccountAlreadyExists('account already exists');
@@ -24,7 +29,7 @@ class AddAccountDatasourceImp implements AddAccountDatasource {
       iconPath: account.iconPath,
     );
 
-    await _accountCollection.add(accountDto.toMap()).onError(
+    await accountCollection.add(accountDto.toMap()).onError(
         (e, _) => throw AddError('Error to add new account: ${e.toString()}'));
 
     return true;

@@ -3,16 +3,21 @@ import 'package:organizze_app/app/categories/domain/entities/category_entity.dar
 import 'package:organizze_app/app/categories/domain/errors/add_category_errors.dart';
 import 'package:organizze_app/app/categories/infra/datasources/add_category_datasource.dart';
 import 'package:organizze_app/app/categories/infra/dtos/category_dto.dart';
+import 'package:organizze_app/app/core/utils/firebase_collections.dart';
 
 class AddCategoryDatasourceImp implements AddCategoryDatasource {
-  final CollectionReference _categoryCollection;
+  final FirebaseFirestore _firebaseFirestore;
 
-  AddCategoryDatasourceImp(this._categoryCollection);
+  AddCategoryDatasourceImp(this._firebaseFirestore);
 
   @override
-  Future<bool> call(CategoryEntity category) async {
+  Future<bool> call(CategoryEntity category, String userId) async {
+    final categoryCollection = _firebaseFirestore.collection(
+      '${FirebaseCollections.users}/$userId/${FirebaseCollections.categories}',
+    );
+
     final query =
-        await _categoryCollection.where('name', isEqualTo: category.name).get();
+        await categoryCollection.where('name', isEqualTo: category.name).get();
 
     if (query.docs.isNotEmpty) {
       throw CategoryAlreadyExists('category already exists');
@@ -24,7 +29,7 @@ class AddCategoryDatasourceImp implements AddCategoryDatasource {
       iconPath: category.iconPath,
     );
 
-    await _categoryCollection
+    await categoryCollection
         .add(categoryDto.toMap())
         .onError((e, _) => throw AddError(e.toString()));
 

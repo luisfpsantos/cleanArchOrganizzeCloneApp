@@ -31,6 +31,7 @@ dependencies:
   cloud_firestore: #firebase
   dartz: #for either better code
   shared_preferences: # for storage local data
+  provider: #dependency injection
   flutter:
     sdk: flutter
 

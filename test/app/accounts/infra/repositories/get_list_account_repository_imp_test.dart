@@ -19,26 +19,26 @@ void main() {
   });
 
   test('should return list of AccountEntity', () async {
-    when(() => datasource()).thenAnswer((_) async => <AccountEntity>[]);
+    when(() => datasource(any())).thenAnswer((_) async => <AccountEntity>[]);
 
-    final result = await repository();
+    final result = await repository('userId');
 
     expect(result.fold(id, id), isA<List<AccountEntity>>());
   });
 
   test('should return error when not found any account', () async {
-    when(() => datasource()).thenThrow(NoAccountsFound('test'));
+    when(() => datasource(any())).thenThrow(NoAccountsFound('test'));
 
-    final result = await repository();
+    final result = await repository('userId');
 
     expect(result.fold(id, id), isA<NoAccountsFound>());
   });
 
   test('should return repository error when data source throw unknown error',
       () async {
-    when(() => datasource()).thenThrow(Exception('test'));
+    when(() => datasource(any())).thenThrow(Exception('test'));
 
-    final result = await repository();
+    final result = await repository('userId');
 
     expect(result.fold(id, id), isA<RepositoryError>());
   });

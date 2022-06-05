@@ -25,24 +25,27 @@ void main() {
   });
 
   test('should return true when add is succeed', () async {
-    when(() => repository(any())).thenAnswer((_) async => right(true));
+    when(() => repository(any(), any())).thenAnswer((_) async => right(true));
 
     var result = await usecase(
-        CategoryEntity(name: 'test', categoryType: 'test', iconPath: 'test'));
+        CategoryEntity(name: 'test', categoryType: 'test', iconPath: 'test'),
+        'userId');
 
     expect(result.fold(id, id), true);
   });
 
   test('should return error when name is empty', () async {
     var result = await usecase(
-        CategoryEntity(name: '', categoryType: 'test', iconPath: 'test'));
+        CategoryEntity(name: '', categoryType: 'test', iconPath: 'test'),
+        'userId');
 
     expect(result.fold(id, id), isA<InvalidArgument>());
   });
 
   test('should return error when iconPath is empty', () async {
     var result = await usecase(
-        CategoryEntity(name: 'test', categoryType: 'test', iconPath: ''));
+        CategoryEntity(name: 'test', categoryType: 'test', iconPath: ''),
+        'userId');
 
     expect(result.fold(id, id), isA<InvalidArgument>());
   });

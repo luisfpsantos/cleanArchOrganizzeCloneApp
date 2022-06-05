@@ -19,26 +19,27 @@ void main() {
   });
 
   test('should return List of CategoriEntity', () async {
-    when(() => datasource(any())).thenAnswer((_) async => <CategoryEntity>[]);
+    when(() => datasource(any(), any()))
+        .thenAnswer((_) async => <CategoryEntity>[]);
 
-    final result = await repository('expanse');
+    final result = await repository('expanse', 'userId');
 
     expect(result.fold(id, id), isA<List<CategoryEntity>>());
   });
 
   test('should return error when list is empty', () async {
-    when(() => datasource(any())).thenThrow(NoCategoriesFound('test'));
+    when(() => datasource(any(), any())).thenThrow(NoCategoriesFound('test'));
 
-    final result = await repository('income');
+    final result = await repository('income', 'userId');
 
     expect(result.fold(id, id), isA<NoCategoriesFound>());
   });
 
   test('should return repository error when datasource throw unknown error',
       () async {
-    when(() => datasource(any())).thenThrow(NoCategoriesFound('test'));
+    when(() => datasource(any(), any())).thenThrow(NoCategoriesFound('test'));
 
-    final result = await repository('income');
+    final result = await repository('income', 'userId');
 
     expect(result.fold(id, id), isA<NoCategoriesFound>());
   });

@@ -24,33 +24,41 @@ void main() {
   });
 
   test('should return true when credit card is added', () async {
-    when(() => repository(any())).thenAnswer((_) async => right(true));
+    when(() => repository(any(), any())).thenAnswer((_) async => right(true));
 
-    final result = await usecase(CreditCardEntity(
-        closedDay: 1, dueDay: 1, iconPath: '/', limit: 1, name: 'test'));
+    final result = await usecase(
+        CreditCardEntity(
+            closedDay: 1, dueDay: 1, iconPath: '/', limit: 1, name: 'test'),
+        'userID');
 
     expect(result.fold(id, id), true);
   });
 
   test('should return invalid argument when name is not provided', () async {
-    final result = await usecase(CreditCardEntity(
-        closedDay: 1, dueDay: 1, iconPath: '/', limit: 1, name: ''));
+    final result = await usecase(
+        CreditCardEntity(
+            closedDay: 1, dueDay: 1, iconPath: '/', limit: 1, name: ''),
+        'userID');
 
     expect(result.fold(id, id), isA<InvalidArgument>());
     expect(result.fold((l) => l.msg, id), 'name credit card is necessary');
   });
 
   test('should return invalid argument when icon is not provided', () async {
-    final result = await usecase(CreditCardEntity(
-        closedDay: 1, dueDay: 1, iconPath: '', limit: 1, name: 'a'));
+    final result = await usecase(
+        CreditCardEntity(
+            closedDay: 1, dueDay: 1, iconPath: '', limit: 1, name: 'a'),
+        'userId');
 
     expect(result.fold(id, id), isA<InvalidArgument>());
     expect(result.fold((l) => l.msg, id), 'icon is necessary');
   });
 
   test('should return invalid argument when closed day is equal 0', () async {
-    final result = await usecase(CreditCardEntity(
-        closedDay: 0, dueDay: 1, iconPath: '', limit: 1, name: 'a'));
+    final result = await usecase(
+        CreditCardEntity(
+            closedDay: 0, dueDay: 1, iconPath: '', limit: 1, name: 'a'),
+        'userId');
 
     expect(result.fold(id, id), isA<InvalidArgument>());
     expect(result.fold((l) => l.msg, id), 'closed day is invalid');
@@ -58,32 +66,40 @@ void main() {
 
   test('should return invalid argument when closed day greater than 31',
       () async {
-    final result = await usecase(CreditCardEntity(
-        closedDay: 32, dueDay: 1, iconPath: '', limit: 1, name: 'a'));
+    final result = await usecase(
+        CreditCardEntity(
+            closedDay: 32, dueDay: 1, iconPath: '', limit: 1, name: 'a'),
+        'userId');
 
     expect(result.fold(id, id), isA<InvalidArgument>());
     expect(result.fold((l) => l.msg, id), 'closed day is invalid');
   });
 
   test('should return invalid argument when due Day is equal 0', () async {
-    final result = await usecase(CreditCardEntity(
-        closedDay: 1, dueDay: 0, iconPath: '', limit: 1, name: 'a'));
+    final result = await usecase(
+        CreditCardEntity(
+            closedDay: 1, dueDay: 0, iconPath: '', limit: 1, name: 'a'),
+        'userId');
 
     expect(result.fold(id, id), isA<InvalidArgument>());
     expect(result.fold((l) => l.msg, id), 'due day is invalid');
   });
 
   test('should return invalid argument when due Day greater than 31', () async {
-    final result = await usecase(CreditCardEntity(
-        closedDay: 1, dueDay: 32, iconPath: '', limit: 1, name: 'a'));
+    final result = await usecase(
+        CreditCardEntity(
+            closedDay: 1, dueDay: 32, iconPath: '', limit: 1, name: 'a'),
+        'userId');
 
     expect(result.fold(id, id), isA<InvalidArgument>());
     expect(result.fold((l) => l.msg, id), 'due day is invalid');
   });
 
   test('should return invalid argument when limit is equal 0', () async {
-    final result = await usecase(CreditCardEntity(
-        closedDay: 1, dueDay: 1, iconPath: '/', limit: 0, name: 'a'));
+    final result = await usecase(
+        CreditCardEntity(
+            closedDay: 1, dueDay: 1, iconPath: '/', limit: 0, name: 'a'),
+        'userId');
 
     expect(result.fold(id, id), isA<InvalidArgument>());
     expect(result.fold((l) => l.msg, id), 'limit is invalid');

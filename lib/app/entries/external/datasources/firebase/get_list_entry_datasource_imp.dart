@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:organizze_app/app/core/utils/firebase_collections.dart';
 import 'package:organizze_app/app/entries/domain/entities/entry_entity.dart';
 import 'package:organizze_app/app/entries/domain/entities/query_entity.dart';
 import 'package:organizze_app/app/entries/domain/errors/get_list_entry_errors.dart';
@@ -6,15 +7,22 @@ import 'package:organizze_app/app/entries/infra/datasources/get_list_entry_datas
 import 'package:organizze_app/app/entries/infra/dtos/entry_dto.dart';
 
 class GetListEntryDatasourceImp implements GetListEntryDatasource {
-  final CollectionReference _entriesCollection;
+  final FirebaseFirestore _firebaseFirestore;
 
-  GetListEntryDatasourceImp(this._entriesCollection);
+  GetListEntryDatasourceImp(this._firebaseFirestore);
 
   @override
-  Future<List<EntryEntity>> call({List<QueryEntity>? query}) async {
+  Future<List<EntryEntity>> call(
+    String userId, {
+    List<QueryEntity>? query,
+  }) async {
+    final entriesCollection = _firebaseFirestore.collection(
+      '${FirebaseCollections.users}/$userId/${FirebaseCollections.entries}',
+    );
+
     List<EntryEntity> listEntries = [];
 
-    Query entriesQuery = _entriesCollection.orderBy('date');
+    Query entriesQuery = entriesCollection.orderBy('date');
 
     if (query != null) {
       for (var q in query) {

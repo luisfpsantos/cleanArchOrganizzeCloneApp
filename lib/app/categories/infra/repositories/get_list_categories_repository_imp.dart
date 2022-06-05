@@ -12,9 +12,10 @@ class GetListCategoriesRepositoryImp implements GetListCategoriesRepository {
   @override
   Future<Either<GetListCategoriesErrors, List<CategoryEntity>>> call(
     String categoryType,
+    String userId,
   ) async {
     try {
-      final result = await _getListCategoriesDatasource(categoryType);
+      final result = await _getListCategoriesDatasource(categoryType, userId);
       return right(result);
     } on NoCategoriesFound catch (e) {
       return left(e);

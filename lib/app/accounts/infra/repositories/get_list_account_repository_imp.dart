@@ -10,9 +10,11 @@ class GetListAccountRepositoryImp implements GetListAccountRepository {
   GetListAccountRepositoryImp(this._getListAccountDatasource);
 
   @override
-  Future<Either<GetListAccountErrors, List<AccountEntity>>> call() async {
+  Future<Either<GetListAccountErrors, List<AccountEntity>>> call(
+    String userId,
+  ) async {
     try {
-      final result = await _getListAccountDatasource();
+      final result = await _getListAccountDatasource(userId);
       return right(result);
     } on NoAccountsFound catch (e) {
       return left(e);

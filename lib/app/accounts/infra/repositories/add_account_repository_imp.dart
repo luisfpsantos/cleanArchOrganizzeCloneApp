@@ -10,9 +10,12 @@ class AddAccountRepositoryImp implements AddAccountRepository {
   AddAccountRepositoryImp(this._addAccountDatasource);
 
   @override
-  Future<Either<AddAccountError, bool>> call(AccountEntity account) async {
+  Future<Either<AddAccountError, bool>> call(
+    AccountEntity account,
+    String userId,
+  ) async {
     try {
-      final result = await _addAccountDatasource(account);
+      final result = await _addAccountDatasource(account, userId);
       return right(result);
     } on AddError catch (e) {
       return left(e);

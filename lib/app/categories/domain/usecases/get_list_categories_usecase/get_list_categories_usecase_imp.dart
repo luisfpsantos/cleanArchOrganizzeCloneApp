@@ -12,7 +12,8 @@ class GetListCategoriesUsecaseImp implements GetListCategoriesUsecase {
   @override
   Future<Either<GetListCategoriesErrors, List<CategoryEntity>>> call(
     String categoryType,
+    String userId,
   ) async {
-    return await _getListCategoriesRepository(categoryType);
+    return await _getListCategoriesRepository(categoryType, userId);
   }
 }

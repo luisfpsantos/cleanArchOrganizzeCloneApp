@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:organizze_app/app/core/utils/firebase_collections.dart';
 import 'package:organizze_app/app/entries/domain/entities/entry_entity.dart';
 import 'package:organizze_app/app/entries/domain/entities/query_entity.dart';
 import 'package:organizze_app/app/entries/domain/errors/get_list_entry_errors.dart';
@@ -9,17 +10,18 @@ import 'package:organizze_app/app/entries/infra/datasources/get_list_entry_datas
 
 void main() {
   late FirebaseFirestore firebaseFirestore;
-  late CollectionReference entriesCollection;
   late GetListEntryDatasource datasource;
 
   setUp(() {
     firebaseFirestore = FakeFirebaseFirestore();
-    entriesCollection = firebaseFirestore.collection('users/userId/entries');
-    datasource = GetListEntryDatasourceImp(entriesCollection);
+    datasource = GetListEntryDatasourceImp(firebaseFirestore);
   });
 
   test('should return a list of entry entity', () async {
-    await entriesCollection.add({
+    await firebaseFirestore
+        .collection(
+            '${FirebaseCollections.users}/userId/${FirebaseCollections.entries}')
+        .add({
       'date': DateTime.now(),
       'amount': 1.0,
       'category': 'a',
@@ -28,7 +30,10 @@ void main() {
       'status': 'a',
       'accountType': 'a',
     });
-    await entriesCollection.add({
+    await firebaseFirestore
+        .collection(
+            '${FirebaseCollections.users}/userId/${FirebaseCollections.entries}')
+        .add({
       'date': DateTime.now(),
       'amount': 1.0,
       'category': 'a',
@@ -38,20 +43,23 @@ void main() {
       'accountType': 'a',
     });
 
-    final result = await datasource();
+    final result = await datasource('userId');
 
     expect(result, isA<List<EntryEntity>>());
     expect(result.length, 2);
   });
 
   test('should throw error when not found any entry', () async {
-    final result = datasource();
+    final result = datasource('userId');
 
     expect(result, throwsA(isA<NoEntryFound>()));
   });
 
   test('should return a list of entry entity when passed a query', () async {
-    await entriesCollection.add({
+    await firebaseFirestore
+        .collection(
+            '${FirebaseCollections.users}/userId/${FirebaseCollections.entries}')
+        .add({
       'date': DateTime.now(),
       'amount': 1.0,
       'category': 'a',
@@ -60,7 +68,10 @@ void main() {
       'status': 'a',
       'accountType': 'a',
     });
-    await entriesCollection.add({
+    await firebaseFirestore
+        .collection(
+            '${FirebaseCollections.users}/userId/${FirebaseCollections.entries}')
+        .add({
       'date': DateTime.now(),
       'amount': 1.0,
       'category': 'a',
@@ -71,6 +82,7 @@ void main() {
     });
 
     final result = await datasource(
+      'userId',
       query: [QueryEntity(field: 'description', value: 'test')],
     );
 
@@ -79,7 +91,10 @@ void main() {
   });
 
   test('should throw error when not found entry, passed a query', () async {
-    await entriesCollection.add({
+    await firebaseFirestore
+        .collection(
+            '${FirebaseCollections.users}/userId/${FirebaseCollections.entries}')
+        .add({
       'date': DateTime.now(),
       'amount': 1.0,
       'category': 'a',
@@ -88,7 +103,10 @@ void main() {
       'status': 'a',
       'accountType': 'a',
     });
-    await entriesCollection.add({
+    await firebaseFirestore
+        .collection(
+            '${FirebaseCollections.users}/userId/${FirebaseCollections.entries}')
+        .add({
       'date': DateTime.now(),
       'amount': 1.0,
       'category': 'a',
@@ -99,6 +117,7 @@ void main() {
     });
 
     final result = datasource(
+      'userId',
       query: [QueryEntity(field: 'description', value: 'test')],
     );
 

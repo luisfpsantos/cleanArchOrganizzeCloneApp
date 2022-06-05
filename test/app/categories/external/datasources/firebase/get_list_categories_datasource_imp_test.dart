@@ -5,39 +5,43 @@ import 'package:organizze_app/app/categories/domain/entities/category_entity.dar
 import 'package:organizze_app/app/categories/domain/errors/get_list_categories_erros.dart';
 import 'package:organizze_app/app/categories/external/datasources/firebase/get_list_categories_datasource_imp.dart';
 import 'package:organizze_app/app/categories/infra/datasources/get_list_categories_datasource.dart';
+import 'package:organizze_app/app/core/utils/firebase_collections.dart';
 
 void main() {
   late FirebaseFirestore firebaseFirestore;
-  late CollectionReference categoryCollection;
   late GetListCategoriesDatasource datasource;
 
   setUp(() {
     firebaseFirestore = FakeFirebaseFirestore();
-    categoryCollection =
-        firebaseFirestore.collection('users/userId/categories');
-    datasource = GetListCategoriesDatasourceImp(categoryCollection);
+    datasource = GetListCategoriesDatasourceImp(firebaseFirestore);
   });
 
   test('should return list of CategoryEntity', () async {
-    await categoryCollection.add({
+    await firebaseFirestore
+        .collection(
+            '${FirebaseCollections.users}/userId/${FirebaseCollections.categories}')
+        .add({
       'categoryType': 'income',
       'name': 'name',
       'iconPath': '/a/a',
     });
 
-    final result = await datasource('income');
+    final result = await datasource('income', 'userId');
 
     expect(result, isA<List<CategoryEntity>>());
   });
 
   test('should throw error when not found a category', () async {
-    await categoryCollection.add({
+    await firebaseFirestore
+        .collection(
+            '${FirebaseCollections.users}/userId/${FirebaseCollections.categories}')
+        .add({
       'categoryType': 'income',
       'name': 'name',
       'iconPath': '/a/a',
     });
 
-    final result = datasource('expense');
+    final result = datasource('expense', 'userId');
 
     expect(result, throwsA(isA<NoCategoriesFound>()));
   });

@@ -12,9 +12,10 @@ class AddCreditCardRepositoryImp implements AddCreditCardRepository {
   @override
   Future<Either<AddCreditCardErrors, bool>> call(
     CreditCardEntity creditCard,
+    String userId,
   ) async {
     try {
-      final result = await _addCreditCardDatasource(creditCard);
+      final result = await _addCreditCardDatasource(creditCard, userId);
       return right(result);
     } on AddError catch (e) {
       return left(e);

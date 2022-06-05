@@ -25,37 +25,38 @@ void main() {
   });
 
   test('should return true when add is succeed', () async {
-    when(() => datasource(any())).thenAnswer((_) async => true);
+    when(() => datasource(any(), any())).thenAnswer((_) async => true);
 
     var result = await repository(
-        CategoryEntity(name: '', categoryType: '', iconPath: ''));
+        CategoryEntity(name: '', categoryType: '', iconPath: ''), 'userId');
 
     expect(result.fold(id, id), true);
   });
 
   test('should return AddError when datasource is incapable to save', () async {
-    when(() => datasource(any())).thenThrow(AddError('test'));
+    when(() => datasource(any(), any())).thenThrow(AddError('test'));
 
     var result = await repository(
-        CategoryEntity(name: '', categoryType: '', iconPath: ''));
+        CategoryEntity(name: '', categoryType: '', iconPath: ''), 'userId');
 
     expect(result.fold(id, id), isA<AddError>());
   });
 
   test('should return category already exists', () async {
-    when(() => datasource(any())).thenThrow(CategoryAlreadyExists('test'));
+    when(() => datasource(any(), any()))
+        .thenThrow(CategoryAlreadyExists('test'));
 
     var result = await repository(
-        CategoryEntity(name: '', categoryType: '', iconPath: ''));
+        CategoryEntity(name: '', categoryType: '', iconPath: ''), 'userId');
 
     expect(result.fold(id, id), isA<CategoryAlreadyExists>());
   });
 
   test('should return repositoryError when something is wrong', () async {
-    when(() => datasource(any())).thenThrow(Exception());
+    when(() => datasource(any(), any())).thenThrow(Exception());
 
     var result = await repository(
-        CategoryEntity(name: '', categoryType: '', iconPath: ''));
+        CategoryEntity(name: '', categoryType: '', iconPath: ''), 'userId');
 
     expect(result.fold(id, id), isA<RepositoryError>());
   });

@@ -5,5 +5,6 @@ import 'package:organizze_app/app/categories/domain/errors/get_list_categories_e
 abstract class GetListCategoriesRepository {
   Future<Either<GetListCategoriesErrors, List<CategoryEntity>>> call(
     String categoryType,
+    String userId,
   );
 }

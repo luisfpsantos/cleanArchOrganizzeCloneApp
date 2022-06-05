@@ -11,9 +11,10 @@ class GetListEntryUsecaseImp implements GetListEntryUsecase {
   GetListEntryUsecaseImp(this._getListEntryRepository);
 
   @override
-  Future<Either<GetListEntryErrors, List<EntryEntity>>> call({
+  Future<Either<GetListEntryErrors, List<EntryEntity>>> call(
+    String userId, {
     List<QueryEntity>? query,
   }) async {
-    return await _getListEntryRepository(query: query);
+    return await _getListEntryRepository(userId, query: query);
   }
 }

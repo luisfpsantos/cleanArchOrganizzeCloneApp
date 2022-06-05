@@ -10,9 +10,12 @@ class AddEntryRepositoryImp implements AddEntryRepository {
   AddEntryRepositoryImp(this._addEntryDatasource);
 
   @override
-  Future<Either<AddEntryErrors, bool>> call(EntryEntity entry) async {
+  Future<Either<AddEntryErrors, bool>> call(
+    EntryEntity entry,
+    String userId,
+  ) async {
     try {
-      final result = await _addEntryDatasource(entry);
+      final result = await _addEntryDatasource(entry, userId);
       return right(result);
     } on AddError catch (e) {
       return left(e);

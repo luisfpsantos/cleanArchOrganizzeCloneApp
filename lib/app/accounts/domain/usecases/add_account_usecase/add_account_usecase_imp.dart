@@ -10,7 +10,10 @@ class AddAccountUsecaseImp implements AddAccountUsecase {
   AddAccountUsecaseImp(this._addAccountRepository);
 
   @override
-  Future<Either<AddAccountError, bool>> call(AccountEntity account) async {
+  Future<Either<AddAccountError, bool>> call(
+    AccountEntity account,
+    String userId,
+  ) async {
     if (account.name.isEmpty) {
       return left(InvalidArgument('name account is necessary'));
     }
@@ -19,6 +22,6 @@ class AddAccountUsecaseImp implements AddAccountUsecase {
       return left(InvalidArgument('icon is necessary'));
     }
 
-    return await _addAccountRepository(account);
+    return await _addAccountRepository(account, userId);
   }
 }

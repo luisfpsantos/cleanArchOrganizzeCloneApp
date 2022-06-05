@@ -3,15 +3,20 @@ import 'package:organizze_app/app/accounts/domain/entities/credit_card_entity.da
 import 'package:organizze_app/app/accounts/domain/errors/add_credit_card_error.dart';
 import 'package:organizze_app/app/accounts/infra/datasources/add_credit_card_datasource.dart';
 import 'package:organizze_app/app/accounts/infra/dtos/credit_card_dto.dart';
+import 'package:organizze_app/app/core/utils/firebase_collections.dart';
 
 class AddCreditCardDatasourceImp implements AddCreditCardDatasource {
-  final CollectionReference _creditCardCollection;
+  final FirebaseFirestore _firebaseFirestore;
 
-  AddCreditCardDatasourceImp(this._creditCardCollection);
+  AddCreditCardDatasourceImp(this._firebaseFirestore);
 
   @override
-  Future<bool> call(CreditCardEntity creditCard) async {
-    final query = await _creditCardCollection
+  Future<bool> call(CreditCardEntity creditCard, String userId) async {
+    final creditCardCollection = _firebaseFirestore.collection(
+      '${FirebaseCollections.users}/$userId/${FirebaseCollections.creditCards}',
+    );
+
+    final query = await creditCardCollection
         .where('name', isEqualTo: creditCard.name)
         .get();
 
@@ -27,7 +32,7 @@ class AddCreditCardDatasourceImp implements AddCreditCardDatasource {
       name: creditCard.name,
     );
 
-    await _creditCardCollection
+    await creditCardCollection
         .add(creditCardDto.toMap())
         .onError((error, _) => throw AddError('Error to add new creditCard'));
 

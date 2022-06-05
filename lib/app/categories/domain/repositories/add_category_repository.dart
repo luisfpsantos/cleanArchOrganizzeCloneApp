@@ -3,5 +3,8 @@ import 'package:organizze_app/app/categories/domain/entities/category_entity.dar
 import 'package:organizze_app/app/categories/domain/errors/add_category_errors.dart';
 
 abstract class AddCategoryRepository {
-  Future<Either<AddCategoryErrors, bool>> call(CategoryEntity category);
+  Future<Either<AddCategoryErrors, bool>> call(
+    CategoryEntity category,
+    String userId,
+  );
 }

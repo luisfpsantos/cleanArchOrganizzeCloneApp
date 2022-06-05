@@ -23,25 +23,25 @@ void main() {
   });
 
   test('should return true when account is added', () async {
-    when(() => repository(any())).thenAnswer((_) async => right(true));
+    when(() => repository(any(), any())).thenAnswer((_) async => right(true));
 
     final result = await usecase(
-        AccountEntity(balance: 1, iconPath: '/a/a', name: 'name'));
+        AccountEntity(balance: 1, iconPath: '/a/a', name: 'name'), 'userID');
 
     expect(result.fold(id, id), true);
   });
 
   test('should return invalid argument when name is not provided', () async {
-    final result =
-        await usecase(AccountEntity(balance: 1, iconPath: '/a/a', name: ''));
+    final result = await usecase(
+        AccountEntity(balance: 1, iconPath: '/a/a', name: ''), 'userId');
 
     expect(result.fold(id, id), isA<InvalidArgument>());
     expect(result.fold((l) => l.msg, id), 'name account is necessary');
   });
 
   test('should return invalid argument when icon is not provided', () async {
-    final result =
-        await usecase(AccountEntity(balance: 1, iconPath: '', name: 'test'));
+    final result = await usecase(
+        AccountEntity(balance: 1, iconPath: '', name: 'test'), 'UserID');
 
     expect(result.fold(id, id), isA<InvalidArgument>());
     expect(result.fold((l) => l.msg, id), 'icon is necessary');

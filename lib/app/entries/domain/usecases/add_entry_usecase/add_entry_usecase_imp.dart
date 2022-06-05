@@ -10,7 +10,10 @@ class AddEntryUsecaseImp implements AddEntryUsecase {
   AddEntryUsecaseImp(this._addEntryRepository);
 
   @override
-  Future<Either<AddEntryErrors, bool>> call(EntryEntity entry) async {
+  Future<Either<AddEntryErrors, bool>> call(
+    EntryEntity entry,
+    String userId,
+  ) async {
     if (entry.accountType.isEmpty) {
       return left(InvalidArgument('account type is necessary'));
     }
@@ -35,6 +38,6 @@ class AddEntryUsecaseImp implements AddEntryUsecase {
       return left(InvalidArgument('status is necessary'));
     }
 
-    return await _addEntryRepository(entry);
+    return await _addEntryRepository(entry, userId);
   }
 }

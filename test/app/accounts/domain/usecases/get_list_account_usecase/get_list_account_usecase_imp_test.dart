@@ -18,9 +18,10 @@ void main() {
   });
 
   test('should return list AccountEntity', () async {
-    when(() => repository()).thenAnswer((_) async => right(<AccountEntity>[]));
+    when(() => repository('userId'))
+        .thenAnswer((_) async => right(<AccountEntity>[]));
 
-    final result = await usecase();
+    final result = await usecase('userId');
 
     expect(result.fold(id, id), isA<List<AccountEntity>>());
   });
