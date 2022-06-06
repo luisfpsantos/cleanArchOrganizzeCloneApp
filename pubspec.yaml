@@ -32,6 +32,7 @@ dependencies:
   dartz: #for either better code
   shared_preferences: # for storage local data
   provider: #dependency injection
+  flutter_bloc: #state_managment
   flutter:
     sdk: flutter
 
