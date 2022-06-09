@@ -14,7 +14,7 @@ void main() async {
 
   setUp(() {
     sharedPreferences = SharedPreferencesMock();
-    datasource = SaveLoginLocalDatasourceImp(sharedPreferences);
+    datasource = SaveLoginLocalDatasourceImp(Future.value(sharedPreferences));
   });
 
   test('should return true user save locally', () async {

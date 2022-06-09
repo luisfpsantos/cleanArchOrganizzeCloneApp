@@ -18,27 +18,27 @@ void main() {
     repository = GetUserLocalRepositoryImp(datasource);
   });
 
-  test('should return LoginEntity', () {
-    when(() => datasource()).thenReturn(
+  test('should return LoginEntity', () async {
+    when(() => datasource()).thenAnswer((_) async =>
         LoginEntity(password: 'password', user: 'user', rememberMe: true));
 
-    var result = repository();
+    var result = await repository();
 
     expect(result.fold(id, id), isA<LoginEntity>());
   });
 
-  test('should return error type GetUserLocalErrors', () {
+  test('should return error type GetUserLocalErrors', () async {
     when(() => datasource()).thenThrow(LocalUserNotFound('msg'));
 
-    var result = repository();
+    var result = await repository();
 
     expect(result.fold(id, id), isA<LocalUserNotFound>());
   });
 
-  test('should return repositoryError when the error is unknown', () {
+  test('should return repositoryError when the error is unknown', () async {
     when(() => datasource()).thenThrow(Exception('msg'));
 
-    var result = repository();
+    var result = await repository();
 
     expect(result.fold(id, id), isA<RepositoryError>());
   });

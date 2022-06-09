@@ -18,19 +18,20 @@ void main() {
     usecase = GetUserLocalUsecaseImp(repository);
   });
 
-  test('should return LoginEntity', () {
-    when(() => repository()).thenReturn(
+  test('should return LoginEntity', () async {
+    when(() => repository()).thenAnswer((_) async =>
         right(LoginEntity(user: '', password: '', rememberMe: false)));
 
-    var result = usecase();
+    var result = await usecase();
 
     expect(result.fold(id, id), isA<LoginEntity>());
   });
 
   test('should return error type GetUserLocalErrors', () async {
-    when(() => repository()).thenReturn(left(LocalUserNotFound('test')));
+    when(() => repository())
+        .thenAnswer((_) async => left(LocalUserNotFound('test')));
 
-    var result = usecase();
+    var result = await usecase();
 
     expect(result.fold(id, id), isA<LocalUserNotFound>());
   });

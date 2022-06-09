@@ -14,14 +14,14 @@ void main() async {
 
   setUp(() {
     sharedPreferences = SharedPreferencesMock();
-    datasource = GetUserLocalDatasourceImp(sharedPreferences);
+    datasource = GetUserLocalDatasourceImp(Future.value(sharedPreferences));
   });
 
   test('should return LoginEntity', () async {
     when(() => sharedPreferences.getString(any()))
         .thenReturn('{"user":"luis","password":"1234","rememberMe":true}');
 
-    var result = datasource();
+    var result = await datasource();
 
     expect(result, isA<LoginEntity>());
   });

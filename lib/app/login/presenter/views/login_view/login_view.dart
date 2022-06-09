@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:organizze_app/app/accounts/views/add_accounts_view/add_accounts_view.dart';
+import 'package:organizze_app/app/login/domain/entities/login_entity.dart';
 import 'package:organizze_app/app/login/presenter/views/login_view/login_view_bloc/login_view_bloc.dart';
 import 'package:organizze_app/app/login/presenter/views/login_view/login_view_bloc/login_view_events.dart';
-import 'package:provider/provider.dart';
+import 'package:organizze_app/app/login/presenter/views/login_view/login_view_bloc/login_view_states.dart';
+import 'package:organizze_app/app/login/presenter/views/login_view/login_view_widgets/login_input_password_widget.dart';
+import 'package:organizze_app/app/login/presenter/views/login_view/login_view_widgets/login_input_user_widget.dart';
+import 'package:organizze_app/app/login/presenter/views/login_view/login_view_widgets/login_submit_button_widget.dart';
+import 'package:organizze_app/app/login/presenter/views/login_view/login_view_widgets/login_title_widget.dart';
 
 class LoginView extends StatefulWidget {
-  static const String routName = '/';
+  static const String routName = '/login';
 
   const LoginView({Key? key}) : super(key: key);
 
@@ -16,6 +24,7 @@ class _LoginViewState extends State<LoginView> {
   late final LoginViewBloc _bloc;
   final _loginController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _checkboxValue = false;
 
   @override
   void initState() {
@@ -27,75 +36,182 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 240, 242, 245),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                TextFormField(
-                  controller: _loginController,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.person),
-                    label: const Text('Usuário'),
-                    floatingLabelStyle: const TextStyle(fontSize: 22),
-                    border: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.blue),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.blue, width: 2),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    errorStyle: const TextStyle(fontSize: 16),
-                  ),
+                const LoginTitleWidget(),
+                const SizedBox(
+                  height: 20,
                 ),
-                TextFormField(
-                  controller: _passwordController,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.person),
-                    label: const Text('Usuário'),
-                    floatingLabelStyle: const TextStyle(fontSize: 22),
-                    border: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.blue),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.blue, width: 2),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    errorStyle: const TextStyle(fontSize: 16),
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(double.maxFinite, 40),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  onPressed: () {
-                    _bloc.add(
-                      VerifyLoginEvent(
-                        user: _loginController.text,
-                        password: _passwordController.text,
-                      ),
+                BlocBuilder<LoginViewBloc, LoginViewStates>(
+                  bloc: _bloc,
+                  builder: (_, state) {
+                    print(state);
+                    if (state is LoginLoading) {
+                      return Column(
+                        children: [
+                          LoginInputUserWidget(
+                            textEditingController: _loginController,
+                            readingOnly: true,
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          LoginInputPasswordWidget(
+                            textEditingController: _passwordController,
+                            readingOnly: true,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: _checkboxValue,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _checkboxValue = value!;
+                                  });
+                                },
+                              ),
+                              const Text('Lembrar login')
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const CircularProgressIndicator(),
+                        ],
+                      );
+                    }
+
+                    if (state is LoginError) {
+                      return Column(
+                        children: [
+                          LoginInputUserWidget(
+                            textEditingController: _loginController,
+                            errorBorder: true,
+                            onChanged: (_) {
+                              _bloc.add(CleanViewErrorsEvent());
+                            },
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          LoginInputPasswordWidget(
+                            textEditingController: _passwordController,
+                            errorBorder: true,
+                            onChanged: (_) {
+                              _bloc.add(CleanViewErrorsEvent());
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: _checkboxValue,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _checkboxValue = value!;
+                                  });
+                                },
+                              ),
+                              const Text('Lembrar login')
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          LoginSubmitButtonWidget(onPressed: _submitButton),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 247, 122, 113),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Text(
+                              state.msg,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+
+                    if (state is LoginSuccess) {
+                      if (_checkboxValue) _checkbox();
+                      SchedulerBinding.instance.addPostFrameCallback((_) {
+                        Navigator.of(context)
+                            .pushReplacementNamed(AddAccountsView.routName);
+                      });
+                    }
+
+                    return Column(
+                      children: [
+                        LoginInputUserWidget(
+                          textEditingController: _loginController,
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        LoginInputPasswordWidget(
+                          textEditingController: _passwordController,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            Checkbox(
+                              value: _checkboxValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  _checkboxValue = value!;
+                                });
+                              },
+                            ),
+                            const Text('Lembrar login')
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        LoginSubmitButtonWidget(onPressed: _submitButton),
+                      ],
                     );
                   },
-                  child: const Text(
-                    'Entrar',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                  ),
                 ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  void _checkbox() {
+    _bloc.add(SaveLoginLocalEvent(
+      LoginEntity(
+        user: _loginController.text,
+        password: _passwordController.text,
+        rememberMe: _checkboxValue,
+      ),
+    ));
+  }
+
+  void _submitButton() {
+    _bloc.add(
+      VerifyLoginEvent(
+          user: _loginController.text, password: _passwordController.text),
     );
   }
 }

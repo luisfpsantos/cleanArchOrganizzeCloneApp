@@ -10,7 +10,7 @@ class GetUserLocalUsecaseImp implements GetUserLocalUsecase {
   GetUserLocalUsecaseImp(this._getUserLocalRepository);
 
   @override
-  Either<GetUserLocalErrors, LoginEntity> call() {
-    return _getUserLocalRepository();
+  Future<Either<GetUserLocalErrors, LoginEntity>> call() async {
+    return await _getUserLocalRepository();
   }
 }

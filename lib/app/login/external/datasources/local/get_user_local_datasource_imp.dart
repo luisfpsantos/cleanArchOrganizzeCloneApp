@@ -7,14 +7,16 @@ import 'package:organizze_app/app/login/infra/dtos/login_dto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GetUserLocalDatasourceImp implements GetUserLocalDatasource {
-  final SharedPreferences _sharedPreferencesInstance;
+  final Future<SharedPreferences> _sharedPreferencesInstance;
 
   GetUserLocalDatasourceImp(this._sharedPreferencesInstance);
 
   @override
-  LoginEntity call() {
-    var result = _sharedPreferencesInstance
-        .getString(SharedPreferencesKeys.loginLocalKey);
+  Future<LoginEntity> call() async {
+    final sharedPreferences = await _sharedPreferencesInstance;
+
+    final result =
+        sharedPreferences.getString(SharedPreferencesKeys.loginLocalKey);
 
     if (result == null) {
       throw LocalUserNotFound('local user not found');

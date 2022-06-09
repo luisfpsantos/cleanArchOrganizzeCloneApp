@@ -3,5 +3,5 @@ import 'package:organizze_app/app/login/domain/entities/login_entity.dart';
 import 'package:organizze_app/app/login/domain/errors/get_user_local_errors.dart';
 
 abstract class GetUserLocalUsecase {
-  Either<GetUserLocalErrors, LoginEntity> call();
+  Future<Either<GetUserLocalErrors, LoginEntity>> call();
 }
