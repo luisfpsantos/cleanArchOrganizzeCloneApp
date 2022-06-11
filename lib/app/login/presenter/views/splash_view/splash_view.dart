@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:organizze_app/app/accounts/views/add_accounts_view/add_accounts_view.dart';
+import 'package:organizze_app/app/accounts/views/accounts_view/accounts_view.dart';
 import 'package:organizze_app/app/login/domain/entities/login_entity.dart';
 import 'package:organizze_app/app/login/domain/usecases/get_user_local_usecase/get_user_local_usecase.dart';
 import 'package:organizze_app/app/login/domain/usecases/verify_login_usecase/verify_login_usecase.dart';
@@ -70,10 +70,7 @@ class _SplashViewState extends State<SplashView> {
   void _loading() async {
     final result = await _getUserLocal();
     final localUser = result.fold(
-      (error) {
-        print(error.msg);
-        Navigator.pushReplacementNamed(context, LoginView.routName);
-      },
+      (error) => Navigator.pushReplacementNamed(context, LoginView.routName),
       (sucess) => sucess,
     );
 

@@ -15,13 +15,14 @@ class LoginViewBloc extends Bloc<LoginViewEvents, LoginViewStates> {
   ) : super(LoginIdle()) {
     on<VerifyLoginEvent>(_verifyLoginEvent);
     on<CleanViewErrorsEvent>(_cleanViewErrors);
-    on<SaveLoginLocalEvent>(_saveLoginLocal);
   }
 
-  Future<void> _verifyLoginEvent(event, emit) async {
+  Future<void> _verifyLoginEvent(VerifyLoginEvent event, emit) async {
     emit(LoginLoading());
-    final result = await _verifyLoginUsecase(event.user, event.password);
-    result.fold(
+    final result =
+        await _verifyLoginUsecase(event.login.user, event.login.password);
+
+    final valid = result.fold(
       (error) {
         if (error is UserOrPasswordInvalid) {
           emit(LoginError('Usuario ou senha invalidos'));
@@ -29,21 +30,24 @@ class LoginViewBloc extends Bloc<LoginViewEvents, LoginViewStates> {
         if (error is RepositoryError) {
           emit(LoginError('Erro inesperado, contacte o administrador'));
         }
+        return false;
       },
-      (success) => emit(LoginSuccess()),
+      (success) => success,
     );
+
+    if (valid) {
+      if (event.login.rememberMe) {
+        final result = await _saveLoginLocalUsecase(event.login);
+        result.fold(
+          (error) => emit(LoginError('Não foi possivel salvar usuario')),
+          (success) => emit(LoginSuccess()),
+        );
+      }
+      emit(LoginSuccess());
+    }
   }
 
   Future<void> _cleanViewErrors(event, emit) async {
     emit(LoginIdle());
-  }
-
-  Future<void> _saveLoginLocal(event, emit) async {
-    emit(LoginLoading());
-    final result = await _saveLoginLocalUsecase(event.login);
-    result.fold(
-      (error) => emit(LoginError('Não foi possivel salvar usuario e senha')),
-      (success) => emit(LoginIdle()),
-    );
   }
 }

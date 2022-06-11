@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:organizze_app/app/accounts/views/add_accounts_view/add_accounts_view.dart';
+import 'package:organizze_app/app/accounts/views/accounts_view/accounts_view.dart';
 import 'package:organizze_app/app/login/domain/entities/login_entity.dart';
 import 'package:organizze_app/app/login/presenter/views/login_view/login_view_bloc/login_view_bloc.dart';
 import 'package:organizze_app/app/login/presenter/views/login_view/login_view_bloc/login_view_events.dart';
@@ -46,67 +45,126 @@ class _LoginViewState extends State<LoginView> {
                 const SizedBox(
                   height: 20,
                 ),
-                BlocBuilder<LoginViewBloc, LoginViewStates>(
-                  bloc: _bloc,
-                  builder: (_, state) {
-                    print(state);
-                    if (state is LoginLoading) {
-                      return Column(
-                        children: [
-                          LoginInputUserWidget(
-                            textEditingController: _loginController,
-                            readingOnly: true,
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          LoginInputPasswordWidget(
-                            textEditingController: _passwordController,
-                            readingOnly: true,
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: _checkboxValue,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _checkboxValue = value!;
-                                  });
-                                },
-                              ),
-                              const Text('Lembrar login')
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          const CircularProgressIndicator(),
-                        ],
+                BlocListener<LoginViewBloc, LoginViewStates>(
+                  listener: (context, state) {
+                    if (state is LoginSuccess) {
+                      Navigator.pushReplacementNamed(
+                        context,
+                        AddAccountsView.routName,
                       );
                     }
+                  },
+                  child: BlocBuilder<LoginViewBloc, LoginViewStates>(
+                    bloc: _bloc,
+                    builder: (_, state) {
+                      if (state is LoginLoading) {
+                        return Column(
+                          children: [
+                            LoginInputUserWidget(
+                              textEditingController: _loginController,
+                              readingOnly: true,
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            LoginInputPasswordWidget(
+                              textEditingController: _passwordController,
+                              readingOnly: true,
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              children: [
+                                Checkbox(
+                                  value: _checkboxValue,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _checkboxValue = value!;
+                                    });
+                                  },
+                                ),
+                                const Text('Lembrar login')
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const CircularProgressIndicator(),
+                          ],
+                        );
+                      }
 
-                    if (state is LoginError) {
+                      if (state is LoginError) {
+                        return Column(
+                          children: [
+                            LoginInputUserWidget(
+                              textEditingController: _loginController,
+                              errorBorder: true,
+                              onChanged: (_) {
+                                _bloc.add(CleanViewErrorsEvent());
+                              },
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            LoginInputPasswordWidget(
+                              textEditingController: _passwordController,
+                              errorBorder: true,
+                              onChanged: (_) {
+                                _bloc.add(CleanViewErrorsEvent());
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              children: [
+                                Checkbox(
+                                  value: _checkboxValue,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _checkboxValue = value!;
+                                    });
+                                  },
+                                ),
+                                const Text('Lembrar login')
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            LoginSubmitButtonWidget(onPressed: _submitButton),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(255, 247, 122, 113),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text(
+                                state.msg,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+
                       return Column(
                         children: [
                           LoginInputUserWidget(
                             textEditingController: _loginController,
-                            errorBorder: true,
-                            onChanged: (_) {
-                              _bloc.add(CleanViewErrorsEvent());
-                            },
                           ),
                           const SizedBox(
                             height: 15,
                           ),
                           LoginInputPasswordWidget(
                             textEditingController: _passwordController,
-                            errorBorder: true,
-                            onChanged: (_) {
-                              _bloc.add(CleanViewErrorsEvent());
-                            },
                           ),
                           const SizedBox(
                             height: 20,
@@ -128,67 +186,10 @@ class _LoginViewState extends State<LoginView> {
                             height: 20,
                           ),
                           LoginSubmitButtonWidget(onPressed: _submitButton),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 247, 122, 113),
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Text(
-                              state.msg,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
                         ],
                       );
-                    }
-
-                    if (state is LoginSuccess) {
-                      if (_checkboxValue) _checkbox();
-                      SchedulerBinding.instance.addPostFrameCallback((_) {
-                        Navigator.of(context)
-                            .pushReplacementNamed(AddAccountsView.routName);
-                      });
-                    }
-
-                    return Column(
-                      children: [
-                        LoginInputUserWidget(
-                          textEditingController: _loginController,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        LoginInputPasswordWidget(
-                          textEditingController: _passwordController,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: _checkboxValue,
-                              onChanged: (value) {
-                                setState(() {
-                                  _checkboxValue = value!;
-                                });
-                              },
-                            ),
-                            const Text('Lembrar login')
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        LoginSubmitButtonWidget(onPressed: _submitButton),
-                      ],
-                    );
-                  },
+                    },
+                  ),
                 ),
               ],
             ),
@@ -198,20 +199,15 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  void _checkbox() {
-    _bloc.add(SaveLoginLocalEvent(
-      LoginEntity(
-        user: _loginController.text,
-        password: _passwordController.text,
-        rememberMe: _checkboxValue,
-      ),
-    ));
-  }
-
   void _submitButton() {
     _bloc.add(
       VerifyLoginEvent(
-          user: _loginController.text, password: _passwordController.text),
+        login: LoginEntity(
+          user: _loginController.text,
+          password: _passwordController.text,
+          rememberMe: _checkboxValue,
+        ),
+      ),
     );
   }
 }
