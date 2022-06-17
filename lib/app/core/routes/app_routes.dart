@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:organizze_app/app/accounts/views/accounts_view/accounts_view.dart';
-import 'package:organizze_app/app/login/presenter/views/login_view/login_view.dart';
-import 'package:organizze_app/app/login/presenter/views/splash_view/splash_view.dart';
+import 'package:organizze_app/app/modules/accounts/views/accounts_view/accounts_view.dart';
+import 'package:organizze_app/app/modules/login/presenter/views/login_view/login_view.dart';
+import 'package:organizze_app/app/modules/login/presenter/views/splash_view/splash_view.dart';
 
 class AppRoutes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
