@@ -13,7 +13,9 @@ import 'package:organizze_app/app/modules/login/presenter/views/login_view/login
 class LoginView extends StatefulWidget {
   static const String routName = '/login';
 
-  const LoginView({Key? key}) : super(key: key);
+  final String? splashError;
+
+  const LoginView({Key? key, this.splashError}) : super(key: key);
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -29,6 +31,9 @@ class _LoginViewState extends State<LoginView> {
   void initState() {
     super.initState();
     _bloc = context.read<LoginViewBloc>();
+    if (widget.splashError != null) {
+      _bloc.add(SplashErrorEvent(widget.splashError!));
+    }
   }
 
   @override
@@ -51,6 +56,7 @@ class _LoginViewState extends State<LoginView> {
                       Navigator.pushReplacementNamed(
                         context,
                         AddAccountsView.routName,
+                        arguments: state.loggedUser,
                       );
                     }
                   },
@@ -147,8 +153,9 @@ class _LoginViewState extends State<LoginView> {
                               child: Text(
                                 state.msg,
                                 style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ],

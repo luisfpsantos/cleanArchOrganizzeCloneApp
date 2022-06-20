@@ -5,6 +5,7 @@ import 'package:organizze_app/app/modules/accounts/domain/usecases/get_list_acco
 import 'package:organizze_app/app/modules/accounts/external/datasources/firebase/get_list_account_datasource_imp.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/get_list_account_datasource.dart';
 import 'package:organizze_app/app/modules/accounts/infra/repositories/get_list_account_repository_imp.dart';
+import 'package:organizze_app/app/modules/accounts/views/accounts_view/accounts_view_bloc/accounts_view_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -20,6 +21,9 @@ class AccountsViewDependencies {
       Provider<GetListAccountUsecase>(
         create: (context) => GetListAccountUsecaseImp(context.read()),
       ),
+      Provider<AccountsViewBloc>(
+        create: (context) => AccountsViewBloc(context.read()),
+      )
     ];
   }
 }

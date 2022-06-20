@@ -10,4 +10,10 @@ class VerifyLoginEvent extends LoginViewEvents {
   });
 }
 
+class SplashErrorEvent extends LoginViewEvents {
+  final String msgError;
+
+  SplashErrorEvent(this.msgError);
+}
+
 class CleanViewErrorsEvent extends LoginViewEvents {}

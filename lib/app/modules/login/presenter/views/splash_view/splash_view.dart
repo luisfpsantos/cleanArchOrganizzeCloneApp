@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:organizze_app/app/modules/accounts/views/accounts_view/accounts_view.dart';
 import 'package:organizze_app/app/modules/login/domain/entities/login_entity.dart';
+import 'package:organizze_app/app/modules/login/domain/usecases/get_user_in_database_usecase/get_user_in_database_usecase.dart';
 import 'package:organizze_app/app/modules/login/domain/usecases/get_user_local_usecase/get_user_local_usecase.dart';
 import 'package:organizze_app/app/modules/login/domain/usecases/verify_login_usecase/verify_login_usecase.dart';
 import 'package:organizze_app/app/modules/login/presenter/views/login_view/login_view.dart';
@@ -18,12 +19,14 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   late final GetUserLocalUsecase _getUserLocal;
   late final VerifyLoginUsecase _verifyLogin;
+  late final GetUserInDatabaseUsecase _getUserDatabase;
 
   @override
   void initState() {
     super.initState();
     _getUserLocal = context.read<GetUserLocalUsecase>();
     _verifyLogin = context.read<VerifyLoginUsecase>();
+    _getUserDatabase = context.read<GetUserInDatabaseUsecase>();
     Future.delayed(const Duration(milliseconds: 1000), _loading);
   }
 
@@ -77,9 +80,24 @@ class _SplashViewState extends State<SplashView> {
     if (localUser is LoginEntity) {
       final verify = await _verifyLogin(localUser.user, localUser.password);
       verify.fold(
-        (error) => Navigator.pushReplacementNamed(context, LoginView.routName),
-        (success) =>
-            Navigator.pushReplacementNamed(context, AddAccountsView.routName),
+        (error) {
+          Navigator.pushReplacementNamed(context, LoginView.routName);
+        },
+        (success) async {
+          final loggedUser = await _getUserDatabase(localUser.user);
+          loggedUser.fold(
+            (error) => Navigator.pushReplacementNamed(
+              context,
+              LoginView.routName,
+              arguments: 'Não foi possivel buscar usuario na base de dados',
+            ),
+            (success) => Navigator.pushReplacementNamed(
+              context,
+              AddAccountsView.routName,
+              arguments: success,
+            ),
+          );
+        },
       );
     }
   }

@@ -13,6 +13,7 @@ class AccountsViewBloc extends Bloc<AccountViewEvents, AccountsViewStates> {
 
   Future<void> _fetchAccounts(FetchAccounts event, emit) async {
     emit(AccountsLoading());
+
     final result = await _getListAccountUsecase(event.userId);
     result.fold(
       (error) {
