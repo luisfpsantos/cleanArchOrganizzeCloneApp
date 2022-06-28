@@ -1,4 +1,4 @@
-class GetListAccountErrors implements Exception {
+class GetListAccountErrors {
   final String msg;
 
   GetListAccountErrors(this.msg);
@@ -6,8 +6,4 @@ class GetListAccountErrors implements Exception {
 
 class NoAccountsFound extends GetListAccountErrors {
   NoAccountsFound(super.msg);
-}
-
-class RepositoryError extends GetListAccountErrors {
-  RepositoryError(super.msg);
 }

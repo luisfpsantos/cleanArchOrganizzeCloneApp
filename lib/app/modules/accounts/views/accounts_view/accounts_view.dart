@@ -3,13 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:organizze_app/app/modules/accounts/views/accounts_view/accounts_view_bloc/accounts_view_bloc.dart';
 import 'package:organizze_app/app/modules/accounts/views/accounts_view/accounts_view_bloc/accounts_view_events.dart';
 import 'package:organizze_app/app/modules/accounts/views/accounts_view/accounts_view_bloc/accounts_view_states.dart';
+import 'package:organizze_app/app/modules/accounts/views/accounts_view/widgets/account_add_modal_bottom.dart';
 import 'package:organizze_app/app/modules/accounts/views/accounts_view/widgets/account_card_widget.dart';
-import 'package:organizze_app/app/modules/login/domain/entities/logged_user_entity.dart';
+import 'package:organizze_app/app/modules/accounts/views/select_icon_account_view/select_icon_account_view.dart';
+import 'package:organizze_app/app/modules/login/domain/entities/user_entity.dart';
 
 class AddAccountsView extends StatefulWidget {
   static const String routName = '/addAccounts';
 
-  final LoggedUserEntity loggedUser;
+  final UserEntity loggedUser;
 
   const AddAccountsView({Key? key, required this.loggedUser}) : super(key: key);
 
@@ -38,7 +40,7 @@ class _AddAccountsViewState extends State<AddAccountsView> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {},
+            onPressed: addAccountButton,
           ),
         ],
       ),
@@ -75,6 +77,46 @@ class _AddAccountsViewState extends State<AddAccountsView> {
 
           return Container();
         },
+      ),
+    );
+  }
+
+  void addAccountButton() {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      shape: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+      context: context,
+      builder: (_) => AccountAddModalBottom(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Nome da conta'),
+            const TextField(
+              decoration: InputDecoration(hintText: 'Digite o nome da conta'),
+            ),
+            const SizedBox(height: 15),
+            const Text('Icone da conta'),
+            const SizedBox(height: 10),
+            TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(0),
+              ),
+              child: Row(
+                children: [
+                  Image.asset(
+                    'assets/images/login_icons/dollar-symbol.png',
+                    scale: 10,
+                  ),
+                  const SizedBox(width: 10),
+                  const Text('Selecione um icone'),
+                ],
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, SelectIconAccountView.routeName);
+              },
+            )
+          ],
+        ),
       ),
     );
   }

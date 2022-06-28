@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:organizze_app/app/modules/accounts/domain/entities/account_entity.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/get_list_account_errors.dart';
 import 'package:organizze_app/app/modules/accounts/external/datasources/firebase/get_list_account_datasource_imp.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/get_list_account_datasource.dart';
@@ -20,23 +19,27 @@ void main() {
     await firebaseFirestore
         .collection(
             '${FirebaseCollections.users}/userId/${FirebaseCollections.accounts}')
-        .add({
-      'balance': 1.2,
-      'iconPath': '/n',
-      'name': 'name',
-    });
+        .add(
+      {
+        'name': 'teste',
+        'balance': 213.4,
+        'icon': {'name': 'iconName', 'path': 'iconPath'}
+      },
+    );
     await firebaseFirestore
         .collection(
             '${FirebaseCollections.users}/userId/${FirebaseCollections.accounts}')
-        .add({
-      'balance': 1,
-      'iconPath': '/n',
-      'name': 'name1',
-    });
+        .add(
+      {
+        'name': 'teste',
+        'balance': 213.4,
+        'icon': {'name': 'iconName', 'path': 'iconPath'}
+      },
+    );
 
     final result = await datasource('userId');
 
-    expect(result, isA<List<AccountEntity>>());
+    expect(result, isA<List<Map>>());
     expect(result.length, 2);
   });
 

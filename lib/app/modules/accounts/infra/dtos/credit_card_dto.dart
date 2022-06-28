@@ -1,10 +1,11 @@
 import 'package:organizze_app/app/modules/accounts/domain/entities/credit_card_entity.dart';
+import 'package:organizze_app/app/modules/accounts/infra/dtos/icon_dto.dart';
 
 class CreditCardDto extends CreditCardEntity {
   CreditCardDto({
     required super.closedDay,
     required super.dueDay,
-    required super.iconPath,
+    required super.icon,
     required super.limit,
     required super.name,
   });
@@ -13,17 +14,17 @@ class CreditCardDto extends CreditCardEntity {
     return {
       'closedDay': closedDay,
       'dueDay': dueDay,
-      'iconPath': iconPath,
+      'icon': {'name': icon.name, 'path': icon.path},
       'limit': limit,
       'name': name,
     };
   }
 
-  static CreditCardDto fromMap(Map<String, dynamic> map) {
+  static CreditCardDto fromMap(Map map) {
     return CreditCardDto(
       closedDay: map['closedDay'],
       dueDay: map['dueDay'],
-      iconPath: map['iconPath'],
+      icon: IconDto.fromMap(map['icon']),
       limit: map['limit'].toDouble(),
       name: map['name'],
     );

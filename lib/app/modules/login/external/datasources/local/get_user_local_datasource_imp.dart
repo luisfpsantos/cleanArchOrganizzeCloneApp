@@ -1,9 +1,6 @@
-import 'dart:convert';
 import 'package:organizze_app/app/core/utils/shared_preferences_keys.dart';
-import 'package:organizze_app/app/modules/login/domain/entities/login_entity.dart';
 import 'package:organizze_app/app/modules/login/domain/errors/get_user_local_errors.dart';
 import 'package:organizze_app/app/modules/login/infra/datasources/get_user_local_datasource.dart';
-import 'package:organizze_app/app/modules/login/infra/dtos/login_dto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GetUserLocalDatasourceImp implements GetUserLocalDatasource {
@@ -12,7 +9,7 @@ class GetUserLocalDatasourceImp implements GetUserLocalDatasource {
   GetUserLocalDatasourceImp(this._sharedPreferencesInstance);
 
   @override
-  Future<LoginEntity> call() async {
+  Future<String> call() async {
     final sharedPreferences = await _sharedPreferencesInstance;
 
     final result =
@@ -22,6 +19,6 @@ class GetUserLocalDatasourceImp implements GetUserLocalDatasource {
       throw LocalUserNotFound('local user not found');
     }
 
-    return LoginDto.fromMap(json.decode(result));
+    return result;
   }
 }

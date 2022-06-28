@@ -7,7 +7,3 @@ class SaveLoginLocalErrors implements Exception {
 class UnableToSaveLoginLocal extends SaveLoginLocalErrors {
   UnableToSaveLoginLocal(super.msg);
 }
-
-class RepositoryError extends SaveLoginLocalErrors {
-  RepositoryError(super.msg);
-}

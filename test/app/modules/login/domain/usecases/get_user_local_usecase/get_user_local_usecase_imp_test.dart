@@ -1,16 +1,17 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:organizze_app/app/modules/login/domain/entities/login_entity.dart';
+import 'package:organizze_app/app/modules/login/domain/entities/user_local_entity.dart';
 import 'package:organizze_app/app/modules/login/domain/errors/get_user_local_errors.dart';
-import 'package:organizze_app/app/modules/login/domain/repositories/get_user_local_repository.dart';
+import 'package:organizze_app/app/modules/login/domain/repositories/user_local_respository.dart';
 import 'package:organizze_app/app/modules/login/domain/usecases/get_user_local_usecase/get_user_local_usecase.dart';
 import 'package:organizze_app/app/modules/login/domain/usecases/get_user_local_usecase/get_user_local_usecase_imp.dart';
+import 'package:organizze_app/app/modules/login/infra/dtos/user_local_dto.dart';
 
-class RepositoryMock extends Mock implements GetUserLocalRepository {}
+class RepositoryMock extends Mock implements UserLocalRepository {}
 
 void main() {
-  late RepositoryMock repository;
+  late UserLocalRepository repository;
   late GetUserLocalUsecase usecase;
 
   setUp(() {
@@ -18,18 +19,21 @@ void main() {
     usecase = GetUserLocalUsecaseImp(repository);
   });
 
-  test('should return LoginEntity', () async {
-    when(() => repository()).thenAnswer((_) async =>
-        right(LoginEntity(user: '', password: '', rememberMe: false)));
+  test('should return userLocalEntity', () async {
+    when(() => repository.getUserLocal()).thenAnswer(
+      (_) async => right(
+          UserLocalDto(user: 'user', userID: 'userID', password: 'password')),
+    );
 
     var result = await usecase();
 
-    expect(result.fold(id, id), isA<LoginEntity>());
+    expect(result.fold(id, id), isA<UserLocalEntity>());
   });
 
   test('should return error type GetUserLocalErrors', () async {
-    when(() => repository())
-        .thenAnswer((_) async => left(LocalUserNotFound('test')));
+    when(() => repository.getUserLocal()).thenAnswer(
+      (_) async => left(LocalUserNotFound('test')),
+    );
 
     var result = await usecase();
 

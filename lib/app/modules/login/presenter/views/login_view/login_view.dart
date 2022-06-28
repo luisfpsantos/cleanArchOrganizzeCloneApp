@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:organizze_app/app/modules/accounts/views/accounts_view/accounts_view.dart';
-import 'package:organizze_app/app/modules/login/domain/entities/login_entity.dart';
 import 'package:organizze_app/app/modules/login/presenter/views/login_view/login_view_bloc/login_view_bloc.dart';
 import 'package:organizze_app/app/modules/login/presenter/views/login_view/login_view_bloc/login_view_events.dart';
 import 'package:organizze_app/app/modules/login/presenter/views/login_view/login_view_bloc/login_view_states.dart';
@@ -209,11 +208,9 @@ class _LoginViewState extends State<LoginView> {
   void _submitButton() {
     _bloc.add(
       VerifyLoginEvent(
-        login: LoginEntity(
-          user: _loginController.text,
-          password: _passwordController.text,
-          rememberMe: _checkboxValue,
-        ),
+        user: _loginController.text,
+        password: _passwordController.text,
+        remeberMe: _checkboxValue,
       ),
     );
   }

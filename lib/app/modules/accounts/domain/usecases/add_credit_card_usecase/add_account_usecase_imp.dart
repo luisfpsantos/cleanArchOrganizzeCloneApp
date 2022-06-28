@@ -1,13 +1,13 @@
 import 'package:organizze_app/app/modules/accounts/domain/entities/credit_card_entity.dart';
 import 'package:dartz/dartz.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/add_credit_card_error.dart';
-import 'package:organizze_app/app/modules/accounts/domain/repositories/add_credit_card_repository.dart';
+import 'package:organizze_app/app/modules/accounts/domain/repositories/accounts_repository.dart';
 import 'package:organizze_app/app/modules/accounts/domain/usecases/add_credit_card_usecase/add_credit_card_usecase.dart';
 
 class AddCreditCardUsecaseImp implements AddCreditCardUsecase {
-  final AddCreditCardRepository _addCreditCardRepository;
+  final AccountsRepository _accountsRepository;
 
-  AddCreditCardUsecaseImp(this._addCreditCardRepository);
+  AddCreditCardUsecaseImp(this._accountsRepository);
 
   @override
   Future<Either<AddCreditCardErrors, bool>> call(
@@ -26,7 +26,7 @@ class AddCreditCardUsecaseImp implements AddCreditCardUsecase {
       return left(InvalidArgument('due day is invalid'));
     }
 
-    if (creditCard.iconPath.isEmpty) {
+    if (creditCard.icon.path.isEmpty) {
       return left(InvalidArgument('icon is necessary'));
     }
 
@@ -34,6 +34,6 @@ class AddCreditCardUsecaseImp implements AddCreditCardUsecase {
       return left(InvalidArgument('limit is invalid'));
     }
 
-    return await _addCreditCardRepository(creditCard, userId);
+    return await _accountsRepository.addCreditCard(creditCard, userId);
   }
 }

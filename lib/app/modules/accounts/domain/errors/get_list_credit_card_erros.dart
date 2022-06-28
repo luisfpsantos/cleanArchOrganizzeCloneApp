@@ -1,4 +1,4 @@
-class GetListCreditCardErros implements Exception {
+class GetListCreditCardErros {
   final String msg;
 
   GetListCreditCardErros(this.msg);
@@ -6,8 +6,4 @@ class GetListCreditCardErros implements Exception {
 
 class NoCreditCardFound extends GetListCreditCardErros {
   NoCreditCardFound(super.msg);
-}
-
-class RepositoryError extends GetListCreditCardErros {
-  RepositoryError(super.msg);
 }

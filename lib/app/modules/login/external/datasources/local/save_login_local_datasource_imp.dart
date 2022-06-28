@@ -1,10 +1,7 @@
 import 'package:organizze_app/app/core/utils/shared_preferences_keys.dart';
-import 'package:organizze_app/app/modules/login/domain/entities/login_entity.dart';
 import 'package:organizze_app/app/modules/login/domain/errors/save_login_local_errors.dart';
 import 'package:organizze_app/app/modules/login/infra/datasources/save_login_local_datasource.dart';
-import 'package:organizze_app/app/modules/login/infra/dtos/login_dto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 class SaveLoginLocalDatasourceImp implements SaveLoginLocalDatasource {
   final Future<SharedPreferences> _sharedPreferencesInstance;
@@ -12,17 +9,13 @@ class SaveLoginLocalDatasourceImp implements SaveLoginLocalDatasource {
   SaveLoginLocalDatasourceImp(this._sharedPreferencesInstance);
 
   @override
-  Future<bool> call(LoginEntity login) async {
+  Future<bool> call(String userID, String user, String password) async {
     final sharedPreferences = await _sharedPreferencesInstance;
 
-    String jsonString = json.encode(LoginDto(
-      password: login.password,
-      user: login.user.toLowerCase(),
-      rememberMe: login.rememberMe,
-    ).toMap());
-
     var result = await sharedPreferences.setString(
-        SharedPreferencesKeys.loginLocalKey, jsonString);
+      SharedPreferencesKeys.loginLocalKey,
+      '{"userID": "$userID", "user": "$user", "password": "$password"}',
+    );
 
     if (!result) {
       throw UnableToSaveLoginLocal('Unable to sabe login local');

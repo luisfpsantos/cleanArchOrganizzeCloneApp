@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:organizze_app/app/modules/accounts/domain/entities/credit_card_entity.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/get_list_credit_card_erros.dart';
 import 'package:organizze_app/app/modules/accounts/external/datasources/firebase/get_list_credit_card_datasource_imp.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/get_list_credit_card_datasource.dart';
@@ -41,7 +40,7 @@ void main() {
 
     final result = await datasource('userId');
 
-    expect(result, isA<List<CreditCardEntity>>());
+    expect(result, isA<List<Map>>());
     expect(result.length, 2);
   });
 

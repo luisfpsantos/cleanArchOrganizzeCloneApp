@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:organizze_app/app/modules/accounts/domain/entities/account_entity.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/add_account_error.dart';
 import 'package:organizze_app/app/modules/accounts/external/datasources/firebase/add_account_datasource_imp.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/add_account_datasource.dart';
@@ -18,7 +17,13 @@ void main() {
 
   test('should return true when account is added', () async {
     final result = await datasource(
-        AccountEntity(balance: 1, iconPath: '/n', name: 'a'), 'userId');
+      {
+        'name': 'teste',
+        'balance': 213.4,
+        'icon': {'name': 'iconName', 'path': 'iconPath'}
+      },
+      'userId',
+    );
 
     expect(result, true);
   });
@@ -28,13 +33,19 @@ void main() {
         .collection(
             '${FirebaseCollections.users}/userId/${FirebaseCollections.accounts}')
         .add({
-      'balance': 1,
-      'iconPath': '/n',
-      'name': 'a',
+      'name': 'teste',
+      'balance': 213.4,
+      'icon': {'name': 'iconName', 'path': 'iconPath'}
     });
 
     final result = datasource(
-        AccountEntity(balance: 1, iconPath: '/n', name: 'a'), 'userId');
+      {
+        'name': 'teste',
+        'balance': 213.4,
+        'icon': {'name': 'iconName', 'path': 'iconPath'}
+      },
+      'userId',
+    );
 
     expect(result, throwsA(isA<AccountAlreadyExists>()));
   });

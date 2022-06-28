@@ -1,4 +1,4 @@
-import 'package:organizze_app/app/modules/login/domain/entities/logged_user_entity.dart';
+import 'package:organizze_app/app/modules/login/domain/entities/user_entity.dart';
 
 abstract class LoginViewStates {}
 
@@ -13,7 +13,7 @@ class LoginError extends LoginViewStates {
 }
 
 class LoginSuccess extends LoginViewStates {
-  final LoggedUserEntity loggedUser;
+  final UserEntity loggedUser;
 
   LoginSuccess(this.loggedUser);
 }

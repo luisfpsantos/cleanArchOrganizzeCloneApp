@@ -1,12 +1,14 @@
-import 'package:organizze_app/app/modules/login/domain/entities/login_entity.dart';
-
 abstract class LoginViewEvents {}
 
 class VerifyLoginEvent extends LoginViewEvents {
-  final LoginEntity login;
+  final String user;
+  final String password;
+  final bool remeberMe;
 
   VerifyLoginEvent({
-    required this.login,
+    required this.user,
+    required this.password,
+    required this.remeberMe,
   });
 }
 

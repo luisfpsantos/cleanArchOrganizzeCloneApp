@@ -20,10 +20,6 @@ class AccountsViewBloc extends Bloc<AccountViewEvents, AccountsViewStates> {
         if (error is NoAccountsFound) {
           emit(AccountsNotFound('Não encontrei nenhuma conta cadastrada'));
         }
-
-        if (error is RepositoryError) {
-          emit(AccountsError('Erro inesperado, contate o administrador'));
-        }
       },
       (success) => emit(AccountsSuccess(success)),
     );

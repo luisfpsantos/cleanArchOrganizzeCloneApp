@@ -1,21 +1,17 @@
-class AddAccountError implements Exception {
+class AddAccountErrors {
   final String msg;
 
-  AddAccountError(this.msg);
+  AddAccountErrors(this.msg);
 }
 
-class InvalidArgument extends AddAccountError {
+class InvalidArgument extends AddAccountErrors {
   InvalidArgument(super.msg);
 }
 
-class AddError extends AddAccountError {
-  AddError(super.msg);
+class AddAccountError extends AddAccountErrors {
+  AddAccountError(super.msg);
 }
 
-class AccountAlreadyExists extends AddAccountError {
+class AccountAlreadyExists extends AddAccountErrors {
   AccountAlreadyExists(super.msg);
-}
-
-class RepositoryError extends AddAccountError {
-  RepositoryError(super.msg);
 }
