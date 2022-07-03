@@ -84,7 +84,7 @@ class _SplashViewState extends State<SplashView> {
         (success) {
           Navigator.pushReplacementNamed(
             context,
-            AddAccountsView.routName,
+            AccountsView.routName,
             arguments: success,
           );
         },

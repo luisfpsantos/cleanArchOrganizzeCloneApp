@@ -3,6 +3,7 @@ import 'package:organizze_app/app/modules/accounts/infra/dtos/icon_dto.dart';
 
 class CreditCardDto extends CreditCardEntity {
   CreditCardDto({
+    required super.id,
     required super.closedDay,
     required super.dueDay,
     required super.icon,
@@ -22,6 +23,7 @@ class CreditCardDto extends CreditCardEntity {
 
   static CreditCardDto fromMap(Map map) {
     return CreditCardDto(
+      id: map['id'],
       closedDay: map['closedDay'],
       dueDay: map['dueDay'],
       icon: IconDto.fromMap(map['icon']),

@@ -1,3 +1,4 @@
+import 'package:organizze_app/app/modules/accounts/domain/entities/icon_entity.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/get_list_icons_errors.dart';
 import 'package:dartz/dartz.dart';
 import 'package:organizze_app/app/modules/accounts/domain/repositories/accounts_repository.dart';
@@ -9,7 +10,7 @@ class GetListIconsUsecaseImp implements GetListIconsUsecase {
   GetListIconsUsecaseImp(this._accountsRepository);
 
   @override
-  Future<Either<GetListIconsErrors, List<String>>> call(
+  Future<Either<GetListIconsErrors, List<IconEntity>>> call(
       String assetPath) async {
     return await _accountsRepository.getIcons(assetPath);
   }

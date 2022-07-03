@@ -17,6 +17,7 @@ void main() {
   setUpAll(() {
     registerFallbackValue(
       CreditCardEntity(
+        id: '',
         closedDay: 1,
         dueDay: 1,
         icon: IconEntity(name: 's', path: 'a'),
@@ -38,6 +39,7 @@ void main() {
 
     final result = await usecase(
       CreditCardEntity(
+        id: '',
         closedDay: 1,
         dueDay: 1,
         icon: IconEntity(name: 's', path: 'a'),
@@ -53,6 +55,7 @@ void main() {
   test('should return invalid argument when name is not provided', () async {
     final result = await usecase(
       CreditCardEntity(
+        id: '',
         closedDay: 1,
         dueDay: 1,
         icon: IconEntity(name: 's', path: 'a'),
@@ -69,6 +72,7 @@ void main() {
   test('should return invalid argument when icon is not provided', () async {
     final result = await usecase(
       CreditCardEntity(
+        id: '',
         closedDay: 1,
         dueDay: 1,
         icon: IconEntity(name: 's', path: ''),
@@ -85,6 +89,7 @@ void main() {
   test('should return invalid argument when closed day is equal 0', () async {
     final result = await usecase(
       CreditCardEntity(
+        id: '',
         closedDay: 0,
         dueDay: 1,
         icon: IconEntity(name: 's', path: 'a'),
@@ -102,6 +107,7 @@ void main() {
       () async {
     final result = await usecase(
       CreditCardEntity(
+        id: '',
         closedDay: 312,
         dueDay: 1,
         icon: IconEntity(name: 's', path: 'a'),
@@ -118,6 +124,7 @@ void main() {
   test('should return invalid argument when due Day is equal 0', () async {
     final result = await usecase(
       CreditCardEntity(
+        id: '',
         closedDay: 1,
         dueDay: 0,
         icon: IconEntity(name: 's', path: 'a'),
@@ -134,6 +141,7 @@ void main() {
   test('should return invalid argument when due Day greater than 31', () async {
     final result = await usecase(
       CreditCardEntity(
+        id: '',
         closedDay: 1,
         dueDay: 32,
         icon: IconEntity(name: 's', path: 'a'),
@@ -150,6 +158,7 @@ void main() {
   test('should return invalid argument when limit is equal 0', () async {
     final result = await usecase(
       CreditCardEntity(
+        id: '',
         closedDay: 1,
         dueDay: 1,
         icon: IconEntity(name: 's', path: 'a'),

@@ -7,7 +7,9 @@ import 'package:organizze_app/app/modules/accounts/views/accounts_view/accounts_
 class AccountsViewBloc extends Bloc<AccountViewEvents, AccountsViewStates> {
   final GetListAccountUsecase _getListAccountUsecase;
 
-  AccountsViewBloc(this._getListAccountUsecase) : super(AccountsIdle()) {
+  AccountsViewBloc(
+    this._getListAccountUsecase,
+  ) : super(AccountsIdle()) {
     on<FetchAccounts>(_fetchAccounts);
   }
 
@@ -18,7 +20,8 @@ class AccountsViewBloc extends Bloc<AccountViewEvents, AccountsViewStates> {
     result.fold(
       (error) {
         if (error is NoAccountsFound) {
-          emit(AccountsNotFound('Não encontrei nenhuma conta cadastrada'));
+          emit(AccountsNotFound(
+              'Não encontrei nenhuma conta cadastrada. Adicione uma.'));
         }
       },
       (success) => emit(AccountsSuccess(success)),

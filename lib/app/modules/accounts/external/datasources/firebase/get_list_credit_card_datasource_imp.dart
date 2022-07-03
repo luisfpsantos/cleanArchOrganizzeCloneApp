@@ -23,7 +23,9 @@ class GetListCreditCardDatasourceImp implements GetListCreditCardDatasource {
     }
 
     for (var creditCard in creditCards.docs) {
-      listCreditCards.add(creditCard.data());
+      var mapCreditCard = creditCard.data();
+      mapCreditCard['id'] = creditCard.id;
+      listCreditCards.add(mapCreditCard);
     }
 
     return listCreditCards;

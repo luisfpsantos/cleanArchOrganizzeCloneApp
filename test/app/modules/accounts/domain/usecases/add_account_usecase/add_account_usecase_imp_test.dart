@@ -16,7 +16,7 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(AccountEntity(
-        balance: 1, icon: IconEntity(name: 'a', path: '/n'), name: ''));
+        id: '', balance: 1, icon: IconEntity(name: 'a', path: '/n'), name: ''));
   });
 
   setUp(() {
@@ -31,6 +31,7 @@ void main() {
 
     final result = await usecase(
       AccountEntity(
+        id: '',
         balance: 1,
         icon: IconEntity(name: 'a', path: '/n'),
         name: 'a',
@@ -44,6 +45,7 @@ void main() {
   test('should return invalid argument when name is not provided', () async {
     final result = await usecase(
       AccountEntity(
+        id: '',
         balance: 1,
         icon: IconEntity(name: 'a', path: '/n'),
         name: '',
@@ -58,6 +60,7 @@ void main() {
   test('should return invalid argument when icon is not provided', () async {
     final result = await usecase(
       AccountEntity(
+        id: '',
         balance: 1,
         icon: IconEntity(name: 'a', path: ''),
         name: 'a',

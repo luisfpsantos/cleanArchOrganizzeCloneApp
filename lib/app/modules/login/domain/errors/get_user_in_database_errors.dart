@@ -1,4 +1,4 @@
-class GetUserInDatabaseErrors implements Exception {
+class GetUserInDatabaseErrors {
   final String msg;
 
   GetUserInDatabaseErrors(this.msg);

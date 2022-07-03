@@ -6,14 +6,18 @@ import 'package:organizze_app/app/modules/accounts/domain/entities/credit_card_e
 import 'package:organizze_app/app/modules/accounts/domain/entities/icon_entity.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/add_account_error.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/add_credit_card_error.dart';
+import 'package:organizze_app/app/modules/accounts/domain/errors/edit_account_errors.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/get_list_account_errors.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/get_list_credit_card_erros.dart';
+import 'package:organizze_app/app/modules/accounts/domain/errors/remove_account_errors.dart';
 import 'package:organizze_app/app/modules/accounts/domain/repositories/accounts_repository.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/add_account_datasource.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/add_credit_card_datasource.dart';
+import 'package:organizze_app/app/modules/accounts/infra/datasources/edit_account_datasource.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/get_list_account_datasource.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/get_list_credit_card_datasource.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/get_list_icons_datasource.dart';
+import 'package:organizze_app/app/modules/accounts/infra/datasources/remove_account_datasource.dart';
 import 'package:organizze_app/app/modules/accounts/infra/repositories/accounts_repository_imp.dart';
 
 class AddAccountDatasourceMock extends Mock implements AddAccountDatasource {}
@@ -30,7 +34,14 @@ class GetListCreditCardDatasourceMock extends Mock
 class GetListIconsDatasourceMock extends Mock
     implements GetListIconsDatasource {}
 
+class EditAccountDatasourceMock extends Mock implements EditAccountDatasource {}
+
+class RemoveAccountDatasourceMock extends Mock
+    implements RemoveAccountDatasource {}
+
 void main() {
+  late RemoveAccountDatasource removeAccountDatasource;
+  late EditAccountDatasource editAccountDatasource;
   late AddAccountDatasource addAccountDatasource;
   late AddCreditCardDatasource addCreditCardDatasource;
   late GetListAccountDatasource getListAccountDatasource;
@@ -39,6 +50,8 @@ void main() {
   late AccountsRepository repository;
 
   setUp(() {
+    removeAccountDatasource = RemoveAccountDatasourceMock();
+    editAccountDatasource = EditAccountDatasourceMock();
     addAccountDatasource = AddAccountDatasourceMock();
     addCreditCardDatasource = AddCreditCardDatasourceMock();
     getListAccountDatasource = GetListAccountDatasourceMock();
@@ -51,6 +64,8 @@ void main() {
       getListAccountDatasource,
       getListCreditCardDatasource,
       getListIconsDatasource,
+      editAccountDatasource,
+      removeAccountDatasource,
     );
   });
 
@@ -62,6 +77,7 @@ void main() {
 
       final result = await repository.addAccount(
         AccountEntity(
+          id: '',
           balance: 1,
           icon: IconEntity(name: 'a', path: '/n'),
           name: 'a',
@@ -80,6 +96,7 @@ void main() {
 
       final result = await repository.addAccount(
         AccountEntity(
+          id: '',
           balance: 1,
           icon: IconEntity(name: 'a', path: '/n'),
           name: 'a',
@@ -97,6 +114,7 @@ void main() {
 
       final result = await repository.addAccount(
         AccountEntity(
+          id: '',
           balance: 1,
           icon: IconEntity(name: 'a', path: '/n'),
           name: 'a',
@@ -116,6 +134,7 @@ void main() {
 
       final result = await repository.addCreditCard(
         CreditCardEntity(
+          id: '',
           closedDay: 1,
           dueDay: 1,
           icon: IconEntity(name: 's', path: 'a'),
@@ -136,6 +155,7 @@ void main() {
 
       final result = await repository.addCreditCard(
         CreditCardEntity(
+          id: '',
           closedDay: 1,
           dueDay: 1,
           icon: IconEntity(name: 's', path: 'a'),
@@ -155,6 +175,7 @@ void main() {
 
       final result = await repository.addCreditCard(
         CreditCardEntity(
+          id: '',
           closedDay: 1,
           dueDay: 1,
           icon: IconEntity(name: 's', path: 'a'),
@@ -209,6 +230,58 @@ void main() {
       final result = await repository.getCreditCards('userId');
 
       expect(result.fold(id, id), isA<NoCreditCardFound>());
+    });
+  });
+
+  group('editAccount', () {
+    test('should return true when account is modified', () async {
+      when(() => editAccountDatasource(any(), any(), any())).thenAnswer(
+        (_) async => true,
+      );
+
+      final result = await repository.editAccount(
+        AccountEntity(
+            id: '', balance: 1, icon: IconEntity(name: '', path: ''), name: ''),
+        'userId',
+      );
+
+      expect(result.fold(id, id), true);
+    });
+
+    test('should return EditAccountError', () async {
+      when(() => editAccountDatasource(any(), any(), any())).thenThrow(
+        EditAccountError(''),
+      );
+
+      final result = await repository.editAccount(
+        AccountEntity(
+            id: '', balance: 1, icon: IconEntity(name: '', path: ''), name: ''),
+        'userId',
+      );
+
+      expect(result.fold(id, id), isA<EditAccountError>());
+    });
+  });
+
+  group('removeAccount', () {
+    test('should return true when account is removed', () async {
+      when(() => removeAccountDatasource(any(), any())).thenAnswer(
+        (_) async => true,
+      );
+
+      final result = await repository.removeAccount('userID', 'accountID');
+
+      expect(result.fold(id, id), true);
+    });
+
+    test('should return RemoveAccountError', () async {
+      when(() => removeAccountDatasource(any(), any())).thenThrow(
+        RemoveAccountError(''),
+      );
+
+      final result = await repository.removeAccount('userID', 'accountID');
+
+      expect(result.fold(id, id), isA<RemoveAccountError>());
     });
   });
 }

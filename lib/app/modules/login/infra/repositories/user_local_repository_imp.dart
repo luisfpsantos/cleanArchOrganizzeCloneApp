@@ -36,8 +36,11 @@ class UserLocalRepositoryImp implements UserLocalRepository {
   Future<Either<GetUserLocalErrors, UserLocalEntity>> getUserLocal() async {
     try {
       final result = await _getUserLocalDatasource();
+      Map<String, dynamic> json = jsonDecode(result);
 
-      return right(UserLocalDto.fromMap(jsonDecode(result)));
+      json['password'] = utf8.decode(base64Decode(json['password']));
+
+      return right(UserLocalDto.fromMap(json));
     } on LocalUserNotFound catch (e) {
       return left(e);
     }

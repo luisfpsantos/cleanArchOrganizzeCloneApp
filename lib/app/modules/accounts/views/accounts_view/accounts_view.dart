@@ -3,29 +3,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:organizze_app/app/modules/accounts/views/accounts_view/accounts_view_bloc/accounts_view_bloc.dart';
 import 'package:organizze_app/app/modules/accounts/views/accounts_view/accounts_view_bloc/accounts_view_events.dart';
 import 'package:organizze_app/app/modules/accounts/views/accounts_view/accounts_view_bloc/accounts_view_states.dart';
-import 'package:organizze_app/app/modules/accounts/views/accounts_view/widgets/account_add_modal_bottom.dart';
 import 'package:organizze_app/app/modules/accounts/views/accounts_view/widgets/account_card_widget.dart';
-import 'package:organizze_app/app/modules/accounts/views/select_icon_account_view/select_icon_account_view.dart';
+import 'package:organizze_app/app/modules/accounts/views/add_account_view/add_account_view.dart';
+import 'package:organizze_app/app/modules/accounts/views/edit_account_view/edit_account_view.dart';
 import 'package:organizze_app/app/modules/login/domain/entities/user_entity.dart';
 
-class AddAccountsView extends StatefulWidget {
-  static const String routName = '/addAccounts';
-
+class AccountsView extends StatefulWidget {
+  static const String routName = '/accounts';
   final UserEntity loggedUser;
 
-  const AddAccountsView({Key? key, required this.loggedUser}) : super(key: key);
+  const AccountsView({Key? key, required this.loggedUser}) : super(key: key);
 
   @override
-  State<AddAccountsView> createState() => _AddAccountsViewState();
+  State<AccountsView> createState() => _AccountsViewState();
 }
 
-class _AddAccountsViewState extends State<AddAccountsView> {
+class _AccountsViewState extends State<AccountsView> {
   late final AccountsViewBloc _bloc;
 
   @override
   void initState() {
     super.initState();
-
     _bloc = context.read<AccountsViewBloc>();
     _bloc.add(FetchAccounts(widget.loggedUser.userId));
   }
@@ -39,8 +37,11 @@ class _AddAccountsViewState extends State<AddAccountsView> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.add),
             onPressed: addAccountButton,
+            icon: const Icon(
+              Icons.add,
+              size: 30,
+            ),
           ),
         ],
       ),
@@ -55,7 +56,14 @@ class _AddAccountsViewState extends State<AddAccountsView> {
 
           if (state is AccountsError) {
             return Center(
-              child: Text(state.msg),
+              child: Text(
+                state.msg,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 25,
+                  color: Colors.grey[700],
+                ),
+              ),
             );
           }
 
@@ -65,11 +73,31 @@ class _AddAccountsViewState extends State<AddAccountsView> {
               itemBuilder: (_, index) {
                 return AccountCardWidget(
                   icon: Image.asset(
-                    'assets/images/login_icons/dollar-symbol.png',
+                    state.accounts[index].icon.path,
                     scale: 1,
                   ),
-                  title: Text(state.accounts[index].name),
-                  currentBalance: state.accounts[index].balance.toString(),
+                  title: Text(
+                    state.accounts[index].name,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  currentBalance:
+                      state.accounts[index].balance.toStringAsFixed(2),
+                  onTap: () async {
+                    final result = await Navigator.pushNamed(
+                      context,
+                      EditAccountView.routName,
+                      arguments: {
+                        'loggedUser': widget.loggedUser,
+                        'account': state.accounts[index]
+                      },
+                    );
+                    if (result == true) {
+                      _bloc.add(FetchAccounts(widget.loggedUser.userId));
+                    }
+                  },
                 );
               },
             );
@@ -81,43 +109,15 @@ class _AddAccountsViewState extends State<AddAccountsView> {
     );
   }
 
-  void addAccountButton() {
-    showModalBottomSheet(
+  void addAccountButton() async {
+    var result = await showModalBottomSheet(
       isScrollControlled: true,
       shape: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
       context: context,
-      builder: (_) => AccountAddModalBottom(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Nome da conta'),
-            const TextField(
-              decoration: InputDecoration(hintText: 'Digite o nome da conta'),
-            ),
-            const SizedBox(height: 15),
-            const Text('Icone da conta'),
-            const SizedBox(height: 10),
-            TextButton(
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.all(0),
-              ),
-              child: Row(
-                children: [
-                  Image.asset(
-                    'assets/images/login_icons/dollar-symbol.png',
-                    scale: 10,
-                  ),
-                  const SizedBox(width: 10),
-                  const Text('Selecione um icone'),
-                ],
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, SelectIconAccountView.routeName);
-              },
-            )
-          ],
-        ),
-      ),
+      builder: (_) => AddAccountView(loggedUser: widget.loggedUser),
     );
+    if (result == true) {
+      _bloc.add(FetchAccounts(widget.loggedUser.userId));
+    }
   }
 }

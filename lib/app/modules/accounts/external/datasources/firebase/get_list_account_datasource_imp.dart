@@ -16,14 +16,16 @@ class GetListAccountDatasourceImp implements GetListAccountDatasource {
 
     List<Map> listAccounts = [];
 
-    final accounts = await accountCollection.get();
+    final accounts = await accountCollection.orderBy('name').get();
 
     if (accounts.docs.isEmpty) {
       throw NoAccountsFound('any accounts founded');
     }
 
     for (var account in accounts.docs) {
-      listAccounts.add(account.data());
+      var mapAccount = account.data();
+      mapAccount['id'] = account.id;
+      listAccounts.add(mapAccount);
     }
 
     return listAccounts;

@@ -54,7 +54,7 @@ class _LoginViewState extends State<LoginView> {
                     if (state is LoginSuccess) {
                       Navigator.pushReplacementNamed(
                         context,
-                        AddAccountsView.routName,
+                        AccountsView.routName,
                         arguments: state.loggedUser,
                       );
                     }

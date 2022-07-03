@@ -33,6 +33,7 @@ dependencies:
   shared_preferences: # for storage local data
   provider: #dependency injection
   flutter_bloc: #state_managment
+  currency_text_input_formatter: #mask currency
   flutter:
     sdk: flutter
 

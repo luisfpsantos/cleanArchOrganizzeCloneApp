@@ -3,6 +3,7 @@ import 'package:organizze_app/app/modules/accounts/infra/dtos/icon_dto.dart';
 
 class AccountDto extends AccountEntity {
   AccountDto({
+    required super.id,
     required super.balance,
     required super.icon,
     required super.name,
@@ -18,6 +19,7 @@ class AccountDto extends AccountEntity {
 
   static AccountDto fromMap(Map map) {
     return AccountDto(
+      id: map['id'],
       balance: map['balance'].toDouble(),
       icon: IconDto.fromMap(map['icon']),
       name: map['name'],

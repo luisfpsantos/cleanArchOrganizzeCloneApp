@@ -10,8 +10,6 @@ class GetListIconsDatasourceImp implements GetListIconsDatasource {
 
   @override
   Future<List<String>> call(String assetPath) async {
-    List<String> imagesList = [];
-
     final assets = await _assetBundle.loadString('AssetManifest.json');
 
     final Map<String, dynamic> mapAssets = json.decode(assets);
@@ -21,10 +19,6 @@ class GetListIconsDatasourceImp implements GetListIconsDatasource {
 
     if (filterAssets.isEmpty) throw NoAssetsFound('No assets found');
 
-    for (var asset in filterAssets) {
-      imagesList.add(asset);
-    }
-
-    return imagesList;
+    return filterAssets;
   }
 }
