@@ -7,6 +7,8 @@ import 'package:organizze_app/app/modules/accounts/domain/usecases/add_credit_ca
 import 'package:organizze_app/app/modules/accounts/domain/usecases/add_credit_card_usecase/add_credit_card_usecase.dart';
 import 'package:organizze_app/app/modules/accounts/domain/usecases/edit_account_usecase/edit_account_usecase.dart';
 import 'package:organizze_app/app/modules/accounts/domain/usecases/edit_account_usecase/edit_account_usecase_imp.dart';
+import 'package:organizze_app/app/modules/accounts/domain/usecases/edit_credit_card_usecase/edit_credit_card_usecase.dart';
+import 'package:organizze_app/app/modules/accounts/domain/usecases/edit_credit_card_usecase/edit_credit_card_usecase_imp.dart';
 import 'package:organizze_app/app/modules/accounts/domain/usecases/get_list_account_usecase/get_list_account_usecase.dart';
 import 'package:organizze_app/app/modules/accounts/domain/usecases/get_list_account_usecase/get_list_account_usecase_imp.dart';
 import 'package:organizze_app/app/modules/accounts/domain/usecases/get_list_credit_card_usecase/get_list_credit_card_usecase.dart';
@@ -18,6 +20,7 @@ import 'package:organizze_app/app/modules/accounts/domain/usecases/remove_accoun
 import 'package:organizze_app/app/modules/accounts/external/datasources/firebase/add_account_datasource_imp.dart';
 import 'package:organizze_app/app/modules/accounts/external/datasources/firebase/add_credit_card_datasource_imp.dart';
 import 'package:organizze_app/app/modules/accounts/external/datasources/firebase/edit_account_datasource_imp.dart';
+import 'package:organizze_app/app/modules/accounts/external/datasources/firebase/edit_credit_card_datasource_imp.dart';
 import 'package:organizze_app/app/modules/accounts/external/datasources/firebase/get_list_account_datasource_imp.dart';
 import 'package:organizze_app/app/modules/accounts/external/datasources/firebase/get_list_credit_card_datasource_imp.dart';
 import 'package:organizze_app/app/modules/accounts/external/datasources/firebase/remove_account_datasource_imp.dart';
@@ -25,6 +28,7 @@ import 'package:organizze_app/app/modules/accounts/external/datasources/local/ge
 import 'package:organizze_app/app/modules/accounts/infra/datasources/add_account_datasource.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/add_credit_card_datasource.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/edit_account_datasource.dart';
+import 'package:organizze_app/app/modules/accounts/infra/datasources/edit_credit_card_datasource.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/get_list_account_datasource.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/get_list_credit_card_datasource.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/get_list_icons_datasource.dart';
@@ -63,10 +67,14 @@ class AccountsDependencies {
       Provider<RemoveAccountDatasource>(
         create: (_) => RemoveAccountDatasourceImp(firebaseInstance),
       ),
+      Provider<EditCreditCardDatasource>(
+        create: (_) => EditCreditCardDatasourceImp(firebaseInstance),
+      ),
 
       //REPOSITORIES
       Provider<AccountsRepository>(
         create: (context) => AccountsRepositoryImp(
+          context.read(),
           context.read(),
           context.read(),
           context.read(),
@@ -98,6 +106,9 @@ class AccountsDependencies {
       ),
       Provider<RemoveAccountUsecase>(
         create: (context) => RemoveAccountUsecaseImp(context.read()),
+      ),
+      Provider<EditCreditCardUsecase>(
+        create: (context) => EditCreditCardUsecaseImp(context.read()),
       ),
 
       //BLOC

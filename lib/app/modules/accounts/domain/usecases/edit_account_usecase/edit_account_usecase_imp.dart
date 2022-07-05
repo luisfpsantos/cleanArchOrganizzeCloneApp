@@ -13,9 +13,14 @@ class EditAccountUsecaseImp implements EditAccountUsecase {
     AccountEntity account,
     String userID,
   ) async {
-    if (account.name.isEmpty || account.icon.path.isEmpty) {
-      return left(EditAccountInvalidArgument('name or icon is invalid'));
+    if (account.name.isEmpty) {
+      return left(EditAccountInvalidArgument('name account is necessary'));
     }
+
+    if (account.icon.path.isEmpty) {
+      return left(EditAccountInvalidArgument('icon is necessary'));
+    }
+
     return await _accountsRepository.editAccount(account, userID);
   }
 }

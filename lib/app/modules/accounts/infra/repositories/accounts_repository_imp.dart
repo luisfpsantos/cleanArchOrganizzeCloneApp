@@ -1,5 +1,6 @@
 import 'package:organizze_app/app/modules/accounts/domain/entities/icon_entity.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/edit_account_errors.dart';
+import 'package:organizze_app/app/modules/accounts/domain/errors/edit_credit_card_errors.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/get_list_icons_errors.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/get_list_credit_card_erros.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/get_list_account_errors.dart';
@@ -13,6 +14,7 @@ import 'package:organizze_app/app/modules/accounts/domain/repositories/accounts_
 import 'package:organizze_app/app/modules/accounts/infra/datasources/add_account_datasource.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/add_credit_card_datasource.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/edit_account_datasource.dart';
+import 'package:organizze_app/app/modules/accounts/infra/datasources/edit_credit_card_datasource.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/get_list_account_datasource.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/get_list_credit_card_datasource.dart';
 import 'package:organizze_app/app/modules/accounts/infra/datasources/get_list_icons_datasource.dart';
@@ -22,6 +24,7 @@ import 'package:organizze_app/app/modules/accounts/infra/dtos/credit_card_dto.da
 import 'package:organizze_app/app/modules/accounts/infra/dtos/icon_dto.dart';
 
 class AccountsRepositoryImp implements AccountsRepository {
+  final EditCreditCardDatasource _editCreditCardDatasource;
   final RemoveAccountDatasource _removeAccountDatasource;
   final EditAccountDatasource _editAccountDatasource;
   final AddAccountDatasource _addAccountDatasource;
@@ -38,6 +41,7 @@ class AccountsRepositoryImp implements AccountsRepository {
     this._getListIconsDatasource,
     this._editAccountDatasource,
     this._removeAccountDatasource,
+    this._editCreditCardDatasource,
   );
 
   @override
@@ -166,6 +170,30 @@ class AccountsRepositoryImp implements AccountsRepository {
       final result = await _removeAccountDatasource(userID, accountID);
       return right(result);
     } on RemoveAccountError catch (e) {
+      return left(e);
+    }
+  }
+
+  @override
+  Future<Either<EditCreditCardsErrors, bool>> editCreditCard(
+    CreditCardEntity creditCard,
+    String userID,
+  ) async {
+    try {
+      final reuslt = await _editCreditCardDatasource(
+        CreditCardDto(
+                name: creditCard.name,
+                closedDay: creditCard.closedDay,
+                dueDay: creditCard.dueDay,
+                icon: creditCard.icon,
+                id: creditCard.id,
+                limit: creditCard.limit)
+            .toMap(),
+        creditCard.id,
+        userID,
+      );
+      return right(reuslt);
+    } on EditCreditCardError catch (e) {
       return left(e);
     }
   }

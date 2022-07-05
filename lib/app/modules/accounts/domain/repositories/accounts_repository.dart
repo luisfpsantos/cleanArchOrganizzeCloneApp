@@ -5,6 +5,7 @@ import 'package:organizze_app/app/modules/accounts/domain/entities/icon_entity.d
 import 'package:organizze_app/app/modules/accounts/domain/errors/add_account_error.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/add_credit_card_error.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/edit_account_errors.dart';
+import 'package:organizze_app/app/modules/accounts/domain/errors/edit_credit_card_errors.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/get_list_account_errors.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/get_list_credit_card_erros.dart';
 import 'package:organizze_app/app/modules/accounts/domain/errors/get_list_icons_errors.dart';
@@ -41,5 +42,10 @@ abstract class AccountsRepository {
   Future<Either<RemoveAccountErrors, bool>> removeAccount(
     String userID,
     String accountID,
+  );
+
+  Future<Either<EditCreditCardsErrors, bool>> editCreditCard(
+    CreditCardEntity creditCard,
+    String userID,
   );
 }
