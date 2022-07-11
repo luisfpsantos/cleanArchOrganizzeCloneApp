@@ -1,6 +1,7 @@
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:organizze_app/app/core/models/logged_user.dart';
 import 'package:organizze_app/app/modules/accounts/domain/entities/account_entity.dart';
 import 'package:organizze_app/app/modules/accounts/domain/entities/icon_entity.dart';
 import 'package:organizze_app/app/modules/accounts/views/edit_account_view/edit_account_viw_bloc/edit_account_view_bloc.dart';
@@ -11,9 +12,12 @@ import 'package:organizze_app/app/modules/accounts/views/select_icon_account_vie
 
 class EditAccountView extends StatefulWidget {
   static const String routName = '/editAccount';
-  final dynamic arguments;
+  final AccountEntity accountEntity;
 
-  const EditAccountView({Key? key, required this.arguments}) : super(key: key);
+  const EditAccountView({
+    Key? key,
+    required this.accountEntity,
+  }) : super(key: key);
 
   @override
   State<EditAccountView> createState() => _EditAccountViewState();
@@ -25,6 +29,7 @@ class _EditAccountViewState extends State<EditAccountView> {
   bool iconSelected = false;
   String accountNameController = '';
   late final EditAccountViewBloc _bloc;
+  late final LoggedUser _loggedUser;
   final balanceFormatter = CurrencyTextInputFormatter(
     locale: 'pt',
     symbol: 'R\$',
@@ -33,6 +38,7 @@ class _EditAccountViewState extends State<EditAccountView> {
   @override
   void initState() {
     super.initState();
+    _loggedUser = context.read<LoggedUser>();
     _bloc = context.read<EditAccountViewBloc>();
     _bloc.add(ToEditAccountDefault());
   }
@@ -41,7 +47,7 @@ class _EditAccountViewState extends State<EditAccountView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.arguments['account'].name),
+        title: Text(widget.accountEntity.name),
         elevation: 0,
         centerTitle: true,
         actions: [
@@ -76,8 +82,7 @@ class _EditAccountViewState extends State<EditAccountView> {
                       ),
                       TextFormField(
                           initialValue: balanceFormatter.format(
-                            widget.arguments['account'].balance
-                                .toStringAsFixed(2),
+                            widget.accountEntity.balance.toStringAsFixed(2),
                           ),
                           keyboardType: TextInputType.number,
                           inputFormatters: [balanceFormatter],
@@ -95,7 +100,7 @@ class _EditAccountViewState extends State<EditAccountView> {
                         ),
                       ),
                       TextFormField(
-                        initialValue: widget.arguments['account'].name,
+                        initialValue: widget.accountEntity.name,
                         keyboardType: TextInputType.text,
                         onChanged: (text) {
                           accountNameChange = true;
@@ -142,13 +147,13 @@ class _EditAccountViewState extends State<EditAccountView> {
                                     scale: 10,
                                   )
                                 : Image.asset(
-                                    widget.arguments['account'].icon.path,
+                                    widget.accountEntity.icon.path,
                                     scale: 10,
                                   ),
                             const SizedBox(width: 10),
                             iconSelected
                                 ? Text(icon!.name.replaceAll('.png', ''))
-                                : Text(widget.arguments['account'].icon.name),
+                                : Text(widget.accountEntity.icon.name),
                           ],
                         ),
                       ),
@@ -196,19 +201,18 @@ class _EditAccountViewState extends State<EditAccountView> {
                                   _bloc.add(
                                     OnEditAccountEvent(
                                       AccountEntity(
-                                          id: widget.arguments['account'].id,
-                                          balance: balanceFormatter
-                                              .getUnformattedValue()
-                                              .toDouble(),
-                                          name: accountNameChange
-                                              ? accountNameController
-                                              : widget
-                                                  .arguments['account'].name,
-                                          icon: iconSelected
-                                              ? icon!
-                                              : widget
-                                                  .arguments['account'].icon),
-                                      widget.arguments['loggedUser'].userId,
+                                        id: widget.accountEntity.id,
+                                        balance: balanceFormatter
+                                            .getUnformattedValue()
+                                            .toDouble(),
+                                        name: accountNameChange
+                                            ? accountNameController
+                                            : widget.accountEntity.name,
+                                        icon: iconSelected
+                                            ? icon!
+                                            : widget.accountEntity.icon,
+                                      ),
+                                      _loggedUser.userId,
                                     ),
                                   );
                                 },
@@ -271,8 +275,8 @@ class _EditAccountViewState extends State<EditAccountView> {
       builder: (_) => RemoveAccountModalBottomWidget(onRemove: () {
         _bloc.add(
           OnRemoveAccountEvent(
-            widget.arguments['loggedUser'].userId,
-            widget.arguments['account'].id,
+            _loggedUser.userId,
+            widget.accountEntity.id,
           ),
         );
         Navigator.pop(context);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:organizze_app/app/modules/accounts/views/accounts_view/accounts_view.dart';
+import 'package:organizze_app/app/core/models/logged_user.dart';
+import 'package:organizze_app/app/modules/dashboard/views/dashboard_view/dashboard_view.dart';
 import 'package:organizze_app/app/modules/login/domain/usecases/get_user_local_usecase/get_user_local_usecase.dart';
 import 'package:organizze_app/app/modules/login/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:organizze_app/app/modules/login/presenter/views/login_view/login_view.dart';
@@ -82,11 +83,13 @@ class _SplashViewState extends State<SplashView> {
           Navigator.pushReplacementNamed(context, LoginView.routName);
         },
         (success) {
-          Navigator.pushReplacementNamed(
-            context,
-            AccountsView.routName,
-            arguments: success,
-          );
+          context.read<LoggedUser>().name = success.name;
+          context.read<LoggedUser>().accessLevel = success.accessLevel;
+          context.read<LoggedUser>().authenticated = success.authenticated;
+          context.read<LoggedUser>().user = success.user;
+          context.read<LoggedUser>().userId = success.userId;
+
+          Navigator.pushReplacementNamed(context, DashboardView.routeName);
         },
       );
     }

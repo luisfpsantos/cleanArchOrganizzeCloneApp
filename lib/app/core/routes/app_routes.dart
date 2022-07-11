@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:organizze_app/app/modules/accounts/domain/entities/account_entity.dart';
 import 'package:organizze_app/app/modules/accounts/views/accounts_view/accounts_view.dart';
 import 'package:organizze_app/app/modules/accounts/views/edit_account_view/edit_account_view.dart';
 import 'package:organizze_app/app/modules/accounts/views/select_icon_account_view/select_icon_account_view.dart';
-import 'package:organizze_app/app/modules/login/domain/entities/user_entity.dart';
+import 'package:organizze_app/app/modules/dashboard/views/dashboard_view/dashboard_view.dart';
 import 'package:organizze_app/app/modules/login/presenter/views/login_view/login_view.dart';
 import 'package:organizze_app/app/modules/login/presenter/views/splash_view/splash_view.dart';
 
@@ -23,10 +24,15 @@ class AppRoutes {
           ),
         );
 
+      case DashboardView.routeName:
+        return MaterialPageRoute(
+          builder: (context) => const DashboardView(),
+        );
+
       case AccountsView.routName:
         return MaterialPageRoute(
           builder: (context) => AccountsView(
-            loggedUser: settings.arguments as UserEntity,
+            accountType: settings.arguments as String,
           ),
         );
 
@@ -37,7 +43,9 @@ class AppRoutes {
 
       case EditAccountView.routName:
         return MaterialPageRoute(
-          builder: (context) => EditAccountView(arguments: settings.arguments!),
+          builder: (context) => EditAccountView(
+            accountEntity: settings.arguments as AccountEntity,
+          ),
         );
 
       default:

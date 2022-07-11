@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:organizze_app/app/core/models/logged_user.dart';
 import 'package:organizze_app/app/modules/accounts/domain/entities/account_entity.dart';
 import 'package:organizze_app/app/modules/accounts/domain/entities/icon_entity.dart';
 import 'package:organizze_app/app/modules/accounts/views/add_account_view/add_account_view_bloc/add_account_view_bloc.dart';
 import 'package:organizze_app/app/modules/accounts/views/add_account_view/add_account_view_bloc/add_account_view_events.dart';
 import 'package:organizze_app/app/modules/accounts/views/add_account_view/add_account_view_bloc/add_account_view_states.dart';
 import 'package:organizze_app/app/modules/accounts/views/select_icon_account_view/select_icon_account_view.dart';
-import 'package:organizze_app/app/modules/login/domain/entities/user_entity.dart';
 
 class AddAccountView extends StatefulWidget {
   static const String routName = '/addAccount';
-  final UserEntity loggedUser;
-  const AddAccountView({Key? key, required this.loggedUser}) : super(key: key);
+  const AddAccountView({Key? key}) : super(key: key);
 
   @override
   State<AddAccountView> createState() => _AddAccountViewState();
@@ -22,11 +21,13 @@ class _AddAccountViewState extends State<AddAccountView> {
   String iconName = 'Selecione um icone';
   IconEntity? iconEntity;
   late final AddAccountViewBloc _bloc;
+  late final LoggedUser _loggedUser;
   final _controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    _loggedUser = context.read<LoggedUser>();
     _bloc = context.read<AddAccountViewBloc>();
     _bloc.add(RemoveError());
   }
@@ -176,7 +177,7 @@ class _AddAccountViewState extends State<AddAccountView> {
                                     icon: iconEntity ??
                                         IconEntity(name: '', path: ''),
                                   ),
-                                  widget.loggedUser.userId,
+                                  _loggedUser.userId,
                                 ),
                               );
                             },
@@ -218,7 +219,7 @@ class _AddAccountViewState extends State<AddAccountView> {
                               icon:
                                   iconEntity ?? IconEntity(name: '', path: ''),
                             ),
-                            widget.loggedUser.userId,
+                            _loggedUser.userId,
                           ),
                         );
                       },

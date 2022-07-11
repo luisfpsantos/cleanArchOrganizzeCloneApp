@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:organizze_app/app/modules/accounts/views/accounts_view/accounts_view.dart';
+import 'package:organizze_app/app/core/models/logged_user.dart';
+import 'package:organizze_app/app/modules/dashboard/views/dashboard_view/dashboard_view.dart';
 import 'package:organizze_app/app/modules/login/presenter/views/login_view/login_view_bloc/login_view_bloc.dart';
 import 'package:organizze_app/app/modules/login/presenter/views/login_view/login_view_bloc/login_view_events.dart';
 import 'package:organizze_app/app/modules/login/presenter/views/login_view/login_view_bloc/login_view_states.dart';
@@ -51,13 +52,7 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 BlocListener<LoginViewBloc, LoginViewStates>(
                   listener: (context, state) {
-                    if (state is LoginSuccess) {
-                      Navigator.pushReplacementNamed(
-                        context,
-                        AccountsView.routName,
-                        arguments: state.loggedUser,
-                      );
-                    }
+                    if (state is LoginSuccess) _goToDashboardPage(state);
                   },
                   child: BlocBuilder<LoginViewBloc, LoginViewStates>(
                     bloc: _bloc,
@@ -212,6 +207,19 @@ class _LoginViewState extends State<LoginView> {
         password: _passwordController.text,
         remeberMe: _checkboxValue,
       ),
+    );
+  }
+
+  void _goToDashboardPage(LoginSuccess state) {
+    context.read<LoggedUser>().name = state.loggedUser.name;
+    context.read<LoggedUser>().accessLevel = state.loggedUser.accessLevel;
+    context.read<LoggedUser>().authenticated = state.loggedUser.authenticated;
+    context.read<LoggedUser>().user = state.loggedUser.user;
+    context.read<LoggedUser>().userId = state.loggedUser.userId;
+
+    Navigator.pushReplacementNamed(
+      context,
+      DashboardView.routeName,
     );
   }
 }

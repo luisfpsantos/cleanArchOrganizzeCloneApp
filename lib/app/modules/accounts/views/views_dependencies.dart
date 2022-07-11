@@ -113,7 +113,7 @@ class AccountsDependencies {
 
       //BLOC
       Provider<AccountsViewBloc>(
-        create: (context) => AccountsViewBloc(context.read()),
+        create: (context) => AccountsViewBloc(context.read(), context.read()),
       ),
       Provider<SelectIconAccountViewBloc>(
         create: (context) => SelectIconAccountViewBloc(context.read()),
